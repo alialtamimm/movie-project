@@ -8,7 +8,7 @@ Three Questions:
 3. What obstacles are impeding your progess?
 -----------------------------------------------
 
------
+
 Date: 03/02/2026 from 20:04 to 21:56
 Sprint Number: 1 | Get project setup and understood
 -----
@@ -42,7 +42,7 @@ Attended - Yes
 1. Started today.
 2. Going to read the pdf's and learn more about the language
 3. None.
-----
+
 
 -----
 Date: 04/02/2026 from 20:00 to 21:15
@@ -78,6 +78,7 @@ Attended - Yes
 2. I will e-mail Parallels to get access to Virtual Machine for free
 3. Having a MacBook blocks my progress cause most of the tools that we are using are not optimised for Mac
 
+
 -----
 Date: 05/02/2026 from 13:00 to 13:31
 Sprint Number: 1 | Get project setup and understood
@@ -111,6 +112,7 @@ Attended - Yes
 1. I've emailed Parallels for free version of Virtual Machine.
 2. Talked about the template and the ideas about the web and how we are going to move forward.
 3. None.
+
 
 -----
 Date: 06/02/2026 from 14:00 to 14:31
@@ -146,6 +148,7 @@ Attended - Yes
 2. Discussed over the first design
 3. None
 
+
 -----
 Date: 07/02/2026 from 21:30 to 22:??
 Sprint Number: 2 | Get design ideas going
@@ -180,4 +183,39 @@ Attended - No, weekend
 2. 
 3. 
 
+
 -----
+Date: 24/03/2026 from 20:14 to 21:02
+Sprint Number: 3 | Core Development
+-----
+ 
+Name: Ali Al Tamimi
+Attended - Yes
+1. Reviewed the coursework specification again and went through the weekly slides to plan what data structures to use.
+2. Set up the Console App project in Visual Studio with folder structure (Models, DataStructures, Data). Pushed initial project structure to Git. Started the Film class.
+3. None.
+ 
+Name: Mohamed Aziz Hammami
+Attended - Yes
+1. Looked through the coursework spec and marking scheme to understand what we need.
+2. Discussed with the team what the plan is going forward, talked about sprints and who does what.
+3. We are behind schedule compared to other groups, need to catch up fast.
+ 
+Name: Klejsti Carciu
+Attended - Yes
+1. Reviewed the coursework requirements.
+2. Discussed the project plan, understood my role going forward - meeting minutes and helping with report.
+3. None.
+ 
+Name: Geogios Meltzanas
+Attended - Yes
+1. Went through the coursework spec.
+2. Discussed the testing requirements, will start planning test cases tomorrow.
+3. None.
+ 
+Name: Deniz Ozer
+Attended - Yes
+1. Read through the coursework tasks again.
+2. Discussed classes and who is building what. I will be doing Member and Booking classes and helping with the menu.
+3. None.
+ 
