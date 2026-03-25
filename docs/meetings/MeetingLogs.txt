@@ -218,4 +218,39 @@ Attended - Yes
 1. Read through the coursework tasks again.
 2. Discussed classes and who is building what. I will be doing Member and Booking classes and helping with the menu.
 3. None.
- 
+
+
+-----
+Date: 25/03/2026 from 16:32 to 17:14 and 21:00 to 22:43
+Sprint Number: 3 | Core Development
+-----
+
+Name: Ali Al Tamimi
+Attended - Yes
+Completed the project setup, pushed .gitignore and solution files
+Built the CustomHashTable with insert, search, delete and display, also updated Film class with Equals override
+None
+
+Name: Mohamed Aziz Hammami
+Attended - Yes
+Went over task the task assignments
+Setup GitHub Issues for task tracking and created labels for every sprint
+None
+
+Name: Klejsti Carciu
+Attended - Yes
+Started keeping proper meeting minutes from today
+Will start working on the design document and help with pseudo code
+None
+
+Name: Geogios Meltzanas
+Attended - Yes
+Reviewed the Film class pushed by Ali
+Set up the MSTest project and implemented the initial unit tests for the Film class
+spent some time figuring out how to reference the main project from the test project
+
+Name: Deniz Ozer
+Attended - Yes
+Pulled the project from Git and got it running locally
+Finished the Member class with discount logic and implemented Booking class with constructor and display methods
+None
