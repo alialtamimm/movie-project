@@ -47,5 +47,20 @@ namespace CinemaSystem.Models
         {
             return $"{Title} ({Genre}) - {ShowTime} - £{Price:F2}";
         }
+
+        // Need this so the hash table can compare films properly
+        public override bool Equals(object obj)
+        {
+            if (obj is Film other)
+            {
+                return this.FilmId == other.FilmId;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return FilmId.GetHashCode();
+        }
     }
 }
