@@ -254,3 +254,39 @@ Attended - Yes
 Pulled the project from Git and got it running locally
 Finished the Member class with discount logic and implemented Booking class with constructor and display methods
 None
+
+
+-----
+Date: 26/03/2026 from 16:00 to 18:29 and 20:30 to 22:51
+Sprint Number: 3 | Core Development
+-----
+
+Name: Ali Al Tamimi
+Attended - Yes
+Built the custom hash table with insert, search and delete
+Made the custom linked list with insert at head, insert at tail, search, delete and display methods
+None
+
+Name: Mohamed Aziz Hammami
+Attended - Yes
+Went over the Issues on GitHub and team progress
+Wrote the create_database.sql script with Create Table for films and members and bookings tables and added sample data too
+None
+
+Name: Klejsti Carciu
+Attended - Yes
+Started writing the pseudo code for hash table operations
+Did pseudo code for linked list and added the time complexity table
+None
+
+Name: Geogios Meltzanas
+Attended - Yes
+Finished Film tests
+Wrote the unit tests for the custom hash table like insert, search, delete, contains key, update
+None
+
+Name: Deniz Ozer
+Attended - Yes
+Completed member and booking classes
+Started DatabaseHelper.cs with ADO.NET connection and method to load films, members and bookings from SQL
+Installing Microsoft.Data.SqlClient nuget package
