@@ -7,538 +7,494 @@ namespace CinemaSystem
 {
     class Program
     {
-        // these hold all our data in memory
         static CustomHashTable<int, Film> filmTable = new CustomHashTable<int, Film>(20);
-        static CustomLinkedList<Member> memberList = new CustomLinkedList<Member>();
-        static CustomLinkedList<Booking> bookingList = new CustomLinkedList<Booking>();
+        static CustomLinkedList<Customer> customerList = new CustomLinkedList<Customer>();
+        static CustomLinkedList<Ticket> ticketList = new CustomLinkedList<Ticket>();
         static DatabaseHelper db;
+
+        // who is currently logged in
+        static Customer loggedInCustomer = null;
+        static int nextTicketId = 1;
 
         static void Main(string[] args)
         {
-            // change this to your connection string
             string connString = @"Server=(localdb)\MSSQLLocalDB;Database=CinemaDB;Trusted_Connection=True;";
             db = new DatabaseHelper(connString);
 
-            // load data from database
+            // try loading from database
             try
             {
                 db.LoadFilms(filmTable);
-                db.LoadMembers(memberList);
-                db.LoadBookings(bookingList);
+                db.LoadCustomers(customerList);
+                db.LoadTickets(ticketList);
                 Console.WriteLine("Data loaded from database.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("Could not connect to database: " + ex.Message);
-                Console.WriteLine("Running without database.");
+                Console.WriteLine("Could not connect to database. Loading sample data.");
+                LoadSampleFilms();
             }
 
             Console.WriteLine();
-            Console.WriteLine("  Cinema Film Booking & Membership System");
+            Console.WriteLine("Cinema Film Booking & Membership System");
 
             bool running = true;
 
             while (running)
             {
                 Console.WriteLine();
-                Console.WriteLine("Main Menu");
-                Console.WriteLine("1. Films");
-                Console.WriteLine("2. Members");
-                Console.WriteLine("3. Bookings");
-                Console.WriteLine("4. Exit");
-                Console.Write("Choose an option: ");
 
-                string input = Console.ReadLine();
-
-                switch (input)
+                if (loggedInCustomer == null)
                 {
-                    case "1":
-                        FilmMenu();
-                        break;
-                    case "2":
-                        MemberMenu();
-                        break;
-                    case "3":
-                        BookingMenu();
-                        break;
-                    case "4":
-                        running = false;
-                        Console.WriteLine("Goodbye!");
-                        break;
-                    default:
-                        Console.WriteLine("Invalid option, try again.");
-                        break;
+                    // not logged in menu
+                    Console.WriteLine("Welcome!");
+                    Console.WriteLine("1. Browse films");
+                    Console.WriteLine("2. Register");
+                    Console.WriteLine("3. Login");
+                    Console.WriteLine("4. Exit");
                 }
-            }
-        }
+                else
+                {
+                    // logged in menu
+                    Console.WriteLine($"Hey {loggedInCustomer.FirstName}!");
+                    Console.WriteLine("1. Browse films");
+                    Console.WriteLine("2. Buy a ticket");
+                    Console.WriteLine("3. My tickets");
+                    Console.WriteLine("4. My account");
+                    Console.WriteLine("5. Logout");
+                    Console.WriteLine("6. Exit");
+                }
 
-        // film menu
-        static void FilmMenu()
-        {
-            bool back = false;
-            while (!back)
-            {
-                Console.WriteLine();
-                Console.WriteLine("--- Film Menu ---");
-                Console.WriteLine("1. View all films");
-                Console.WriteLine("2. Search film by ID");
-                Console.WriteLine("3. Search film by title");
-                Console.WriteLine("4. Add a film");
-                Console.WriteLine("5. Back to main menu");
                 Console.Write("Choose: ");
-
                 string input = Console.ReadLine();
 
-                switch (input)
+                if (loggedInCustomer == null)
                 {
-                    case "1":
-                        ViewAllFilms();
-                        break;
-                    case "2":
-                        SearchFilmById();
-                        break;
-                    case "3":
-                        SearchFilmByTitle();
-                        break;
-                    case "4":
-                        AddFilm();
-                        break;
-                    case "5":
-                        back = true;
-                        break;
-                    default:
-                        Console.WriteLine("Invalid option.");
-                        break;
+                    switch (input)
+                    {
+                        case "1":
+                            BrowseFilms();
+                            break;
+                        case "2":
+                            Register();
+                            break;
+                        case "3":
+                            Login();
+                            break;
+                        case "4":
+                            running = false;
+                            Console.WriteLine("Goodbye!");
+                            break;
+                        default:
+                            Console.WriteLine("Invalid option");
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (input)
+                    {
+                        case "1":
+                            BrowseFilms();
+                            break;
+                        case "2":
+                            BuyTicket();
+                            break;
+                        case "3":
+                            ViewMyTickets();
+                            break;
+                        case "4":
+                            ViewAccount();
+                            break;
+                        case "5":
+                            Console.WriteLine($"Logged out. Bye {loggedInCustomer.FirstName}!");
+                            loggedInCustomer = null;
+                            break;
+                        case "6":
+                            running = false;
+                            Console.WriteLine("Goodbye!");
+                            break;
+                        default:
+                            Console.WriteLine("Invalid option");
+                            break;
+                    }
                 }
             }
         }
 
-        static void ViewAllFilms()
+        // load some films if database doesnt work
+        static void LoadSampleFilms()
+        {
+            filmTable.Insert(1, new Film(1, "Inception", "Sci-Fi", 148, "12A", "14:00", 12.99m, 50));
+            filmTable.Insert(2, new Film(2, "The Dark Knight", "Action", 152, "12A", "17:00", 13.99m, 50));
+            filmTable.Insert(3, new Film(3, "Interstellar", "Sci-Fi", 169, "12A", "20:00", 14.99m, 50));
+            filmTable.Insert(4, new Film(4, "The Godfather", "Crime", 175, "18", "21:00", 11.99m, 50));
+            filmTable.Insert(5, new Film(5, "Pulp Fiction", "Crime", 154, "18", "22:00", 11.99m, 50));
+            filmTable.Insert(6, new Film(6, "Toy Story", "Animation", 81, "PG", "11:00", 8.99m, 50));
+            filmTable.Insert(7, new Film(7, "Finding Nemo", "Animation", 100, "U", "13:00", 8.99m, 50));
+            filmTable.Insert(8, new Film(8, "Avengers Endgame", "Action", 181, "12A", "18:30", 15.99m, 50));
+        }
+
+        // browse films
+        static void BrowseFilms()
         {
             Console.WriteLine();
+            Console.WriteLine("Available Films");
+
             Film[] films = filmTable.GetAllValues();
             if (films.Length == 0)
             {
-                Console.WriteLine("No films found.");
+                Console.WriteLine("No films available");
                 return;
             }
 
             for (int i = 0; i < films.Length; i++)
             {
-                Console.WriteLine("---");
+                Console.WriteLine();
                 films[i].DisplayInfo();
-            }
-        }
-
-        static void SearchFilmById()
-        {
-            Console.Write("Enter film ID: ");
-            string input = Console.ReadLine();
-
-            int id;
-            if (!int.TryParse(input, out id))
-            {
-                Console.WriteLine("Please enter a valid number.");
-                return;
+                Console.WriteLine("  -------------------------");
             }
 
-            Film found = filmTable.Search(id);
-            if (found != null)
-            {
-                Console.WriteLine();
-                found.DisplayInfo();
-            }
-            else
-            {
-                Console.WriteLine("Film not found.");
-            }
-        }
+            // search
+            Console.WriteLine();
+            Console.Write("Search by title? (enter title or press Enter to go back): ");
+            string search = Console.ReadLine();
 
-        static void SearchFilmByTitle()
-        {
-            Console.Write("Enter film title (or part of it): ");
-            string title = Console.ReadLine();
-
-            if (string.IsNullOrEmpty(title))
+            if (!string.IsNullOrEmpty(search))
             {
-                Console.WriteLine("Please enter a title.");
-                return;
-            }
-
-            Film[] allFilms = filmTable.GetAllValues();
-            bool found = false;
-
-            for (int i = 0; i < allFilms.Length; i++)
-            {
-                if (allFilms[i].Title.ToLower().Contains(title.ToLower()))
+                bool found = false;
+                for (int i = 0; i < films.Length; i++)
                 {
-                    Console.WriteLine("---");
-                    allFilms[i].DisplayInfo();
-                    found = true;
+                    if (films[i].Title.ToLower().Contains(search.ToLower()))
+                    {
+                        Console.WriteLine();
+                        films[i].DisplayInfo();
+                        found = true;
+                    }
                 }
-            }
-
-            if (!found)
-            {
-                Console.WriteLine("No films found matching that title.");
-            }
-        }
-
-        static void AddFilm()
-        {
-            Film film = new Film();
-
-            Console.Write("Title: ");
-            film.Title = Console.ReadLine();
-            if (string.IsNullOrEmpty(film.Title))
-            {
-                Console.WriteLine("Title cannot be empty.");
-                return;
-            }
-
-            Console.Write("Genre: ");
-            film.Genre = Console.ReadLine();
-
-            Console.Write("Duration (minutes): ");
-            int dur;
-            if (!int.TryParse(Console.ReadLine(), out dur))
-            {
-                Console.WriteLine("Invalid duration.");
-                return;
-            }
-            film.Duration = dur;
-
-            Console.Write("Rating (PG, 12A, 15, 18): ");
-            film.Rating = Console.ReadLine();
-
-            Console.Write("Showtime (e.g. 18:30): ");
-            film.ShowTime = Console.ReadLine();
-
-            Console.Write("Price: ");
-            decimal price;
-            if (!decimal.TryParse(Console.ReadLine(), out price))
-            {
-                Console.WriteLine("Invalid price.");
-                return;
-            }
-            film.Price = price;
-
-            try
-            {
-                int newId = db.AddFilm(film);
-                film.FilmId = newId;
-                filmTable.Insert(newId, film);
-                Console.WriteLine($"Film added with ID {newId}.");
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Could not save to database. Film added to memory only.");
-                film.FilmId = filmTable.Count + 100;
-                filmTable.Insert(film.FilmId, film);
-            }
-        }
-
-        // member menu
-        static void MemberMenu()
-        {
-            bool back = false;
-            while (!back)
-            {
-                Console.WriteLine();
-                Console.WriteLine("--- Member Menu ---");
-                Console.WriteLine("1. View all members");
-                Console.WriteLine("2. Search member by ID");
-                Console.WriteLine("3. Register new member");
-                Console.WriteLine("4. Back to main menu");
-                Console.Write("Choose: ");
-
-                string input = Console.ReadLine();
-
-                switch (input)
+                if (!found)
                 {
-                    case "1":
-                        ViewAllMembers();
-                        break;
-                    case "2":
-                        SearchMemberById();
-                        break;
-                    case "3":
-                        RegisterMember();
-                        break;
-                    case "4":
-                        back = true;
-                        break;
-                    default:
-                        Console.WriteLine("Invalid option.");
-                        break;
+                    Console.WriteLine("No films found matching that");
                 }
             }
         }
 
-        static void ViewAllMembers()
+        // register
+        static void Register()
         {
             Console.WriteLine();
-            Member[] members = memberList.ToArray();
-            if (members.Length == 0)
-            {
-                Console.WriteLine("No members found.");
-                return;
-            }
+            Console.WriteLine("Register");
 
-            for (int i = 0; i < members.Length; i++)
-            {
-                Console.WriteLine("---");
-                members[i].DisplayInfo();
-            }
-        }
-
-        static void SearchMemberById()
-        {
-            Console.Write("Enter member ID: ");
-            int id;
-            if (!int.TryParse(Console.ReadLine(), out id))
-            {
-                Console.WriteLine("Please enter a valid number.");
-                return;
-            }
-
-            Member found = memberList.Search(m => m.MemberId == id);
-            if (found != null)
-            {
-                Console.WriteLine();
-                found.DisplayInfo();
-            }
-            else
-            {
-                Console.WriteLine("Member not found.");
-            }
-        }
-
-        static void RegisterMember()
-        {
-            Member member = new Member();
+            Customer customer = new Customer();
 
             Console.Write("First name: ");
-            member.FirstName = Console.ReadLine();
-            if (string.IsNullOrEmpty(member.FirstName))
+            customer.FirstName = Console.ReadLine();
+            if (string.IsNullOrEmpty(customer.FirstName))
             {
-                Console.WriteLine("Name cannot be empty.");
+                Console.WriteLine("Name cannot be empty");
                 return;
             }
 
             Console.Write("Last name: ");
-            member.LastName = Console.ReadLine();
+            customer.LastName = Console.ReadLine();
+            if (string.IsNullOrEmpty(customer.LastName))
+            {
+                Console.WriteLine("Last name cannot be empty");
+                return;
+            }
 
             Console.Write("Email: ");
-            member.Email = Console.ReadLine();
+            customer.Email = Console.ReadLine();
+            if (string.IsNullOrEmpty(customer.Email) || !customer.Email.Contains("@"))
+            {
+                Console.WriteLine("Please enter a valid email");
+                return;
+            }
+
+            // check if email already registered
+            Customer existing = customerList.Search(c => c.Email == customer.Email);
+            if (existing != null)
+            {
+                Console.WriteLine("An account with that email already exists, try login instead");
+                return;
+            }
+
+            Console.Write("Password: ");
+            customer.Password = Console.ReadLine();
+            if (string.IsNullOrEmpty(customer.Password) || customer.Password.Length < 4)
+            {
+                Console.WriteLine("Password must be at least 4 characters.");
+                return;
+            }
 
             Console.Write("Membership type (Standard/Premium/VIP): ");
             string type = Console.ReadLine();
             if (type != "Standard" && type != "Premium" && type != "VIP")
             {
-                Console.WriteLine("Invalid membership type. Defaulting to Standard.");
+                Console.WriteLine("Invalid type, setting to Standard.");
                 type = "Standard";
             }
-            member.MembershipType = type;
+            customer.MembershipType = type;
 
             try
             {
-                int newId = db.AddMember(member);
-                member.MemberId = newId;
-                memberList.InsertAtTail(member);
-                Console.WriteLine($"Member registered with ID {newId}.");
+                int newId = db.AddCustomer(customer);
+                customer.CustomerId = newId;
             }
             catch (Exception)
             {
-                Console.WriteLine("Could not save to database. Member added to memory only.");
-                member.MemberId = memberList.Count + 100;
-                memberList.InsertAtTail(member);
+                customer.CustomerId = customerList.Count + 1;
+            }
+
+            customerList.InsertAtTail(customer);
+            Console.WriteLine($"Account created! Your customer ID is {customer.CustomerId}, you can now login.");
+        }
+
+        // login
+        static void Login()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Login");
+
+            Console.Write("Email: ");
+            string email = Console.ReadLine();
+
+            Console.Write("Password: ");
+            string password = Console.ReadLine();
+
+            Customer found = customerList.Search(c => c.Email == email && c.Password == password);
+
+            if (found != null)
+            {
+                loggedInCustomer = found;
+                Console.WriteLine($"Welcome back {found.FirstName}!");
+            }
+            else
+            {
+                Console.WriteLine("Invalid email or password");
             }
         }
 
-        // booking menu
-        static void BookingMenu()
+        // buy ticket
+        static void BuyTicket()
         {
-            bool back = false;
-            while (!back)
+            Console.WriteLine();
+            Console.WriteLine("Buy a Ticket");
+
+            // show films
+            Film[] films = filmTable.GetAllValues();
+            for (int i = 0; i < films.Length; i++)
             {
                 Console.WriteLine();
-                Console.WriteLine("--- Booking Menu ---");
-                Console.WriteLine("1. View all bookings");
-                Console.WriteLine("2. Book a film");
-                Console.WriteLine("3. Cancel a booking");
-                Console.WriteLine("4. Back to main menu");
-                Console.Write("Choose: ");
-
-                string input = Console.ReadLine();
-
-                switch (input)
-                {
-                    case "1":
-                        ViewAllBookings();
-                        break;
-                    case "2":
-                        BookFilm();
-                        break;
-                    case "3":
-                        CancelBooking();
-                        break;
-                    case "4":
-                        back = true;
-                        break;
-                    default:
-                        Console.WriteLine("Invalid option.");
-                        break;
-                }
-            }
-        }
-
-        static void ViewAllBookings()
-        {
-            Console.WriteLine();
-            Booking[] bookings = bookingList.ToArray();
-            if (bookings.Length == 0)
-            {
-                Console.WriteLine("No bookings found.");
-                return;
+                films[i].DisplayInfo();
+                Console.WriteLine("  -------------------------");
             }
 
-            for (int i = 0; i < bookings.Length; i++)
-            {
-                Console.WriteLine("---");
-                bookings[i].DisplayInfo();
-            }
-        }
-
-        static void BookFilm()
-        {
-            // show available films first
-            Console.WriteLine();
-            Console.WriteLine("Available films:");
-            ViewAllFilms();
-
-            Console.Write("\nEnter film ID to book: ");
+            Console.Write("\nEnter film ID: ");
             int filmId;
             if (!int.TryParse(Console.ReadLine(), out filmId))
             {
-                Console.WriteLine("Invalid film ID.");
+                Console.WriteLine("Invalid ID");
                 return;
             }
 
             Film film = filmTable.Search(filmId);
             if (film == null)
             {
-                Console.WriteLine("Film not found.");
+                Console.WriteLine("Film not found");
                 return;
             }
 
-            Console.Write("Enter your member ID: ");
-            int memberId;
-            if (!int.TryParse(Console.ReadLine(), out memberId))
+            if (film.AvailableSeats <= 0)
             {
-                Console.WriteLine("Invalid member ID.");
+                Console.WriteLine("Sorry, this showing is sold out");
                 return;
             }
 
-            Member member = memberList.Search(m => m.MemberId == memberId);
-            if (member == null)
-            {
-                Console.WriteLine("Member not found. Please register first.");
-                return;
-            }
-
-            Console.Write("Enter seat number: ");
+            Console.Write("Pick a seat number (1-50): ");
             int seat;
-            if (!int.TryParse(Console.ReadLine(), out seat))
+            if (!int.TryParse(Console.ReadLine(), out seat) || seat < 1 || seat > 50)
             {
-                Console.WriteLine("Invalid seat number.");
+                Console.WriteLine("Invalid seat number");
                 return;
             }
 
             // calculate price with discount
-            decimal discount = member.GetDiscount();
+            decimal discount = loggedInCustomer.GetDiscount();
             decimal finalPrice = film.Price - (film.Price * discount);
 
             Console.WriteLine();
-            Console.WriteLine($"Film: {film.Title}");
-            Console.WriteLine($"Member: {member.FirstName} {member.LastName} ({member.MembershipType})");
-            Console.WriteLine($"Seat: {seat}");
-            Console.WriteLine($"Original price: £{film.Price:F2}");
+            Console.WriteLine($"  Film: {film.Title}");
+            Console.WriteLine($"  Showtime: {film.ShowTime}");
+            Console.WriteLine($"  Seat: {seat}");
+            Console.WriteLine($"  Price: £{film.Price:F2}");
             if (discount > 0)
             {
-                Console.WriteLine($"Discount: {discount * 100}%");
+                Console.WriteLine($"  Discount ({loggedInCustomer.MembershipType}): {discount * 100}%");
+                Console.WriteLine($"  Final price: £{finalPrice:F2}");
             }
-            Console.WriteLine($"Total: £{finalPrice:F2}");
-            Console.Write("Confirm booking? (y/n): ");
 
-            string confirm = Console.ReadLine();
-            if (confirm.ToLower() != "y")
+            // payment details
+            Console.WriteLine();
+            Console.WriteLine("Payment Details");
+
+            Console.Write("Card number (16 digits): ");
+            string cardNum = Console.ReadLine();
+            // validate its only numbers
+            if (string.IsNullOrEmpty(cardNum) || cardNum.Length != 16 || !IsAllDigits(cardNum))
             {
-                Console.WriteLine("Booking cancelled.");
+                Console.WriteLine("Invalid card number, must be 16 digits");
                 return;
             }
 
-            Booking booking = new Booking();
-            booking.MemberId = memberId;
-            booking.FilmId = filmId;
-            booking.SeatNumber = seat;
-            booking.TotalPrice = finalPrice;
+            Console.Write("Expiry month (1-12): ");
+            int expiryMonth;
+            if (!int.TryParse(Console.ReadLine(), out expiryMonth) || expiryMonth < 1 || expiryMonth > 12)
+            {
+                Console.WriteLine("Invalid expiry month");
+                return;
+            }
+
+            Console.Write("Expiry year (e.g. 2027): ");
+            int expiryYear;
+            if (!int.TryParse(Console.ReadLine(), out expiryYear) || expiryYear < 2026)
+            {
+                Console.WriteLine("Invalid expiry year");
+                return;
+            }
+
+            Console.Write("CVV (3 digits): ");
+            string cvv = Console.ReadLine();
+            if (string.IsNullOrEmpty(cvv) || cvv.Length != 3 || !IsAllDigits(cvv))
+            {
+                Console.WriteLine("Invalid CVV, must be 3 digits");
+                return;
+            }
+
+            // address
+            Console.WriteLine();
+            Console.WriteLine("Billing Address");
+
+            Console.Write("Address line: ");
+            string addressLine = Console.ReadLine();
+            if (string.IsNullOrEmpty(addressLine))
+            {
+                Console.WriteLine("Address cannot be empty");
+                return;
+            }
+
+            Console.Write("City: ");
+            string city = Console.ReadLine();
+            if (string.IsNullOrEmpty(city))
+            {
+                Console.WriteLine("City cannot be empty");
+                return;
+            }
+
+            Console.Write("Country: ");
+            string country = Console.ReadLine();
+            if (string.IsNullOrEmpty(country))
+            {
+                Console.WriteLine("Country cannot be empty");
+                return;
+            }
+
+            Console.Write("Postcode: ");
+            string postcode = Console.ReadLine();
+            if (string.IsNullOrEmpty(postcode))
+            {
+                Console.WriteLine("Postcode cannot be empty");
+                return;
+            }
+
+            // confirm
+            Console.WriteLine();
+            Console.Write("Confirm purchase? (y/n): ");
+            string confirm = Console.ReadLine();
+            if (confirm.ToLower() != "y")
+            {
+                Console.WriteLine("Purchase cancelled");
+                return;
+            }
+
+            // create ticket
+            Ticket ticket = new Ticket();
+            ticket.TicketId = nextTicketId;
+            ticket.CustomerId = loggedInCustomer.CustomerId;
+            ticket.FilmId = filmId;
+            ticket.FilmTitle = film.Title;
+            ticket.SeatNumber = seat;
+            ticket.Price = finalPrice;
+            ticket.CardNumber = cardNum;
+            ticket.ExpiryMonth = expiryMonth;
+            ticket.ExpiryYear = expiryYear;
+            ticket.CVV = cvv;
+            ticket.AddressLine = addressLine;
+            ticket.City = city;
+            ticket.Country = country;
+            ticket.Postcode = postcode;
 
             try
             {
-                int newId = db.AddBooking(booking);
-                booking.BookingId = newId;
-                bookingList.InsertAtTail(booking);
-                Console.WriteLine($"Booking confirmed! Booking ID: {newId}");
+                int newId = db.AddTicket(ticket);
+                ticket.TicketId = newId;
             }
             catch (Exception)
             {
-                Console.WriteLine("Could not save to database. Booking added to memory only.");
-                booking.BookingId = bookingList.Count + 100;
-                bookingList.InsertAtTail(booking);
+                ticket.TicketId = nextTicketId;
+            }
+
+            ticketList.InsertAtTail(ticket);
+            film.AvailableSeats--;
+            nextTicketId++;
+
+            Console.WriteLine();
+            Console.WriteLine("Payment successful!");
+            Console.WriteLine($"Your ticket ID is: {ticket.TicketId}");
+            Console.WriteLine($"Enjoy {film.Title}!");
+        }
+
+        // view ur tickets
+        static void ViewMyTickets()
+        {
+            Console.WriteLine();
+            Console.WriteLine("My Tickets");
+
+            Ticket[] myTickets = ticketList.SearchAll(t => t.CustomerId == loggedInCustomer.CustomerId);
+
+            if (myTickets.Length == 0)
+            {
+                Console.WriteLine("You have no tickets");
+                return;
+            }
+
+            for (int i = 0; i < myTickets.Length; i++)
+            {
+                Console.WriteLine();
+                myTickets[i].DisplayInfo();
+                Console.WriteLine("  -------------------------");
             }
         }
 
-        static void CancelBooking()
+        // view account
+        static void ViewAccount()
         {
-            Console.Write("Enter booking ID to cancel: ");
-            int bookingId;
-            if (!int.TryParse(Console.ReadLine(), out bookingId))
-            {
-                Console.WriteLine("Invalid booking ID.");
-                return;
-            }
+            Console.WriteLine();
+            Console.WriteLine("My Account");
+            loggedInCustomer.DisplayInfo();
+        }
 
-            Booking found = bookingList.Search(b => b.BookingId == bookingId);
-            if (found == null)
+        // checks if the string is numbers only
+        static bool IsAllDigits(string str)
+        {
+            for (int i = 0; i < str.Length; i++)
             {
-                Console.WriteLine("Booking not found.");
-                return;
-            }
-
-            Console.Write("Are you sure you want to cancel this booking? (y/n): ");
-            string confirm = Console.ReadLine();
-            if (confirm.ToLower() != "y")
-            {
-                Console.WriteLine("Cancellation aborted.");
-                return;
-            }
-
-            bool deleted = bookingList.Delete(b => b.BookingId == bookingId);
-            if (deleted)
-            {
-                try
+                if (str[i] < '0' || str[i] > '9')
                 {
-                    db.DeleteBooking(bookingId);
+                    return false;
                 }
-                catch (Exception) { }
-
-                Console.WriteLine("Booking cancelled.");
             }
-            else
-            {
-                Console.WriteLine("Could not cancel booking.");
-            }
+            return true;
         }
     }
 }
