@@ -14,7 +14,7 @@ namespace CinemaSystem.Data
             connectionString = connString;
         }
 
-        // load all films from db into the hash table
+        // load the films from db to hash table
         public void LoadFilms(CustomHashTable<int, Film> filmTable)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -34,140 +34,124 @@ namespace CinemaSystem.Data
                     film.Rating = reader["Rating"].ToString();
                     film.ShowTime = reader["ShowTime"].ToString();
                     film.Price = (decimal)reader["Price"];
+                    film.AvailableSeats = (int)reader["AvailableSeats"];
 
                     filmTable.Insert(film.FilmId, film);
                 }
             }
         }
 
-        // load all members from db into list
-        public void LoadMembers(CustomLinkedList<Member> memberList)
+        // load the customers
+        public void LoadCustomers(CustomLinkedList<Customer> customerList)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                string query = "SELECT * FROM Members";
+                string query = "SELECT * FROM Customers";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 SqlDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
-                    Member member = new Member();
-                    member.MemberId = (int)reader["MemberId"];
-                    member.FirstName = reader["FirstName"].ToString();
-                    member.LastName = reader["LastName"].ToString();
-                    member.Email = reader["Email"].ToString();
-                    member.MembershipType = reader["MembershipType"].ToString();
-                    member.JoinDate = (DateTime)reader["JoinDate"];
+                    Customer c = new Customer();
+                    c.CustomerId = (int)reader["CustomerId"];
+                    c.FirstName = reader["FirstName"].ToString();
+                    c.LastName = reader["LastName"].ToString();
+                    c.Email = reader["Email"].ToString();
+                    c.Password = reader["Password"].ToString();
+                    c.MembershipType = reader["MembershipType"].ToString();
+                    c.JoinDate = (DateTime)reader["JoinDate"];
 
-                    memberList.InsertAtTail(member);
+                    customerList.InsertAtTail(c);
                 }
             }
         }
 
-        // load all bookings from db into linked list
-        public void LoadBookings(CustomLinkedList<Booking> bookingList)
+        // load the tickets
+        public void LoadTickets(CustomLinkedList<Ticket> ticketList)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                string query = "SELECT * FROM Bookings";
+                string query = "SELECT * FROM Tickets";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 SqlDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
-                    Booking booking = new Booking();
-                    booking.BookingId = (int)reader["BookingId"];
-                    booking.MemberId = (int)reader["MemberId"];
-                    booking.FilmId = (int)reader["FilmId"];
-                    booking.BookingDate = (DateTime)reader["BookingDate"];
-                    booking.SeatNumber = (int)reader["SeatNumber"];
-                    booking.TotalPrice = (decimal)reader["TotalPrice"];
+                    Ticket t = new Ticket();
+                    t.TicketId = (int)reader["TicketId"];
+                    t.CustomerId = (int)reader["CustomerId"];
+                    t.FilmId = (int)reader["FilmId"];
+                    t.FilmTitle = reader["FilmTitle"].ToString();
+                    t.SeatNumber = (int)reader["SeatNumber"];
+                    t.Price = (decimal)reader["Price"];
+                    t.PurchaseDate = (DateTime)reader["PurchaseDate"];
+                    t.CardNumber = reader["CardNumber"].ToString();
+                    t.ExpiryMonth = (int)reader["ExpiryMonth"];
+                    t.ExpiryYear = (int)reader["ExpiryYear"];
+                    t.CVV = reader["CVV"].ToString();
+                    t.AddressLine = reader["AddressLine"].ToString();
+                    t.City = reader["City"].ToString();
+                    t.Country = reader["Country"].ToString();
+                    t.Postcode = reader["Postcode"].ToString();
 
-                    bookingList.InsertAtTail(booking);
+                    ticketList.InsertAtTail(t);
                 }
             }
         }
 
-        // add the new film to the database
-        public int AddFilm(Film film)
+        // register customer
+        public int AddCustomer(Customer customer)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                string query = "INSERT INTO Films (Title, Genre, Duration, Rating, ShowTime, Price) " +
-                               "VALUES (@title, @genre, @duration, @rating, @showtime, @price); " +
+                string query = "INSERT INTO Customers (FirstName, LastName, Email, Password, MembershipType) " +
+                               "VALUES (@fname, @lname, @email, @password, @type); " +
                                "SELECT SCOPE_IDENTITY();";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@title", film.Title);
-                cmd.Parameters.AddWithValue("@genre", film.Genre);
-                cmd.Parameters.AddWithValue("@duration", film.Duration);
-                cmd.Parameters.AddWithValue("@rating", film.Rating);
-                cmd.Parameters.AddWithValue("@showtime", film.ShowTime);
-                cmd.Parameters.AddWithValue("@price", film.Price);
-
-                // return the new id
-                int newId = Convert.ToInt32(cmd.ExecuteScalar());
-                return newId;
-            }
-        }
-
-        // add a new member to the database
-        public int AddMember(Member member)
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                string query = "INSERT INTO Members (FirstName, LastName, Email, MembershipType) " +
-                               "VALUES (@fname, @lname, @email, @type); " +
-                               "SELECT SCOPE_IDENTITY();";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@fname", member.FirstName);
-                cmd.Parameters.AddWithValue("@lname", member.LastName);
-                cmd.Parameters.AddWithValue("@email", member.Email);
-                cmd.Parameters.AddWithValue("@type", member.MembershipType);
+                cmd.Parameters.AddWithValue("@fname", customer.FirstName);
+                cmd.Parameters.AddWithValue("@lname", customer.LastName);
+                cmd.Parameters.AddWithValue("@email", customer.Email);
+                cmd.Parameters.AddWithValue("@password", customer.Password);
+                cmd.Parameters.AddWithValue("@type", customer.MembershipType);
 
                 int newId = Convert.ToInt32(cmd.ExecuteScalar());
                 return newId;
             }
         }
 
-        // add a new booking to the database
-        public int AddBooking(Booking booking)
+        // save a new ticket
+        public int AddTicket(Ticket ticket)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                string query = "INSERT INTO Bookings (MemberId, FilmId, SeatNumber, TotalPrice) " +
-                               "VALUES (@memberId, @filmId, @seat, @price); " +
+                string query = "INSERT INTO Tickets (CustomerId, FilmId, FilmTitle, SeatNumber, Price, " +
+                               "CardNumber, ExpiryMonth, ExpiryYear, CVV, AddressLine, City, Country, Postcode) " +
+                               "VALUES (@custId, @filmId, @filmTitle, @seat, @price, " +
+                               "@card, @expMonth, @expYear, @cvv, @addr, @city, @country, @postcode); " +
                                "SELECT SCOPE_IDENTITY();";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@memberId", booking.MemberId);
-                cmd.Parameters.AddWithValue("@filmId", booking.FilmId);
-                cmd.Parameters.AddWithValue("@seat", booking.SeatNumber);
-                cmd.Parameters.AddWithValue("@price", booking.TotalPrice);
+                cmd.Parameters.AddWithValue("@custId", ticket.CustomerId);
+                cmd.Parameters.AddWithValue("@filmId", ticket.FilmId);
+                cmd.Parameters.AddWithValue("@filmTitle", ticket.FilmTitle);
+                cmd.Parameters.AddWithValue("@seat", ticket.SeatNumber);
+                cmd.Parameters.AddWithValue("@price", ticket.Price);
+                cmd.Parameters.AddWithValue("@card", ticket.CardNumber);
+                cmd.Parameters.AddWithValue("@expMonth", ticket.ExpiryMonth);
+                cmd.Parameters.AddWithValue("@expYear", ticket.ExpiryYear);
+                cmd.Parameters.AddWithValue("@cvv", ticket.CVV);
+                cmd.Parameters.AddWithValue("@addr", ticket.AddressLine);
+                cmd.Parameters.AddWithValue("@city", ticket.City);
+                cmd.Parameters.AddWithValue("@country", ticket.Country);
+                cmd.Parameters.AddWithValue("@postcode", ticket.Postcode);
 
                 int newId = Convert.ToInt32(cmd.ExecuteScalar());
                 return newId;
-            }
-        }
-
-        // delete a booking from database
-        public bool DeleteBooking(int bookingId)
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                string query = "DELETE FROM Bookings WHERE BookingId = @id";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@id", bookingId);
-
-                int rows = cmd.ExecuteNonQuery();
-                return rows > 0;
             }
         }
     }
