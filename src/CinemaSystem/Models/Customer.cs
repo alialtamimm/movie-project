@@ -33,7 +33,7 @@ namespace CinemaSystem.Models
             JoinDate = DateTime.Now;
         }
 
-        // discount depending on the member
+        // returns discount based on membership type
         public decimal GetDiscount()
         {
             switch (MembershipType)
@@ -43,7 +43,7 @@ namespace CinemaSystem.Models
                 case "VIP":
                     return 0.20m;
                 default:
-                    return 0.00m;
+                    return 0.00m; // no discount for standart
             }
         }
 

@@ -7,10 +7,11 @@ namespace CinemaSystem.Models
         public int FilmId { get; set; }
         public string Title { get; set; }
         public string Genre { get; set; }
-        public int Duration { get; set; } // Minutes
-        public string Rating { get; set; } // PG, 12A, 15, 18
+        public int Duration { get; set; } // minutes
+        public string Rating { get; set; } // pg, 12a, 15, 18
         public string ShowTime { get; set; }
         public decimal Price { get; set; }
+        public int AvailableSeats { get; set; }
 
         public Film()
         {
@@ -18,9 +19,10 @@ namespace CinemaSystem.Models
             Genre = "";
             Rating = "";
             ShowTime = "";
+            AvailableSeats = 50;
         }
 
-        public Film(int filmId, string title, string genre, int duration, string rating, string showTime, decimal price)
+        public Film(int filmId, string title, string genre, int duration, string rating, string showTime, decimal price, int seats)
         {
             FilmId = filmId;
             Title = title;
@@ -29,18 +31,20 @@ namespace CinemaSystem.Models
             Rating = rating;
             ShowTime = showTime;
             Price = price;
+            AvailableSeats = seats;
         }
 
-        // Prints film info to the console
+        // prints film info to the console
         public void DisplayInfo()
         {
-            Console.WriteLine($"ID: {FilmId}");
-            Console.WriteLine($"Title: {Title}");
-            Console.WriteLine($"Genre: {Genre}");
-            Console.WriteLine($"Duration: {Duration} mins");
-            Console.WriteLine($"Rating: {Rating}");
-            Console.WriteLine($"Showtime: {ShowTime}");
-            Console.WriteLine($"Price: £{Price:F2}");
+            Console.WriteLine($"  ID: {FilmId}");
+            Console.WriteLine($"  Title: {Title}");
+            Console.WriteLine($"  Genre: {Genre}");
+            Console.WriteLine($"  Duration: {Duration} mins");
+            Console.WriteLine($"  Rating: {Rating}");
+            Console.WriteLine($"  Showtime: {ShowTime}");
+            Console.WriteLine($"  Price: £{Price:F2}");
+            Console.WriteLine($"  Seats left: {AvailableSeats}");
         }
 
         public override string ToString()
@@ -48,7 +52,7 @@ namespace CinemaSystem.Models
             return $"{Title} ({Genre}) - {ShowTime} - £{Price:F2}";
         }
 
-        // Need this so the hash table can compare films properly
+        // need for the hash table to compare films
         public override bool Equals(object obj)
         {
             if (obj is Film other)
