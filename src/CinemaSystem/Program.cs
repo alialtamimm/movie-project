@@ -31,7 +31,7 @@ namespace CinemaSystem
             }
             catch (Exception)
             {
-                Console.WriteLine("Could not connect to database. Loading sample data.");
+                Console.WriteLine("Couldn't connect to database, loading sample data");
                 LoadSampleFilms();
             }
 
@@ -46,7 +46,6 @@ namespace CinemaSystem
 
                 if (loggedInCustomer == null)
                 {
-                    // not logged in menu
                     Console.WriteLine("Welcome!");
                     Console.WriteLine("1. Browse films");
                     Console.WriteLine("2. Register");
@@ -55,8 +54,7 @@ namespace CinemaSystem
                 }
                 else
                 {
-                    // logged in menu
-                    Console.WriteLine($"Hey {loggedInCustomer.FirstName}!");
+                    Console.WriteLine($"Hello {loggedInCustomer.FirstName}");
                     Console.WriteLine("1. Browse films");
                     Console.WriteLine("2. Buy a ticket");
                     Console.WriteLine("3. My tickets");
@@ -107,7 +105,7 @@ namespace CinemaSystem
                             ViewAccount();
                             break;
                         case "5":
-                            Console.WriteLine($"Logged out. Bye {loggedInCustomer.FirstName}!");
+                            Console.WriteLine($"Logged out, bye {loggedInCustomer.FirstName}!");
                             loggedInCustomer = null;
                             break;
                         case "6":
@@ -155,26 +153,49 @@ namespace CinemaSystem
                 Console.WriteLine("  -------------------------");
             }
 
-            // search
             Console.WriteLine();
-            Console.Write("Search by title? (enter title or press Enter to go back): ");
-            string search = Console.ReadLine();
+            Console.WriteLine("1. Search by title");
+            Console.WriteLine("2. Search by genre");
+            Console.WriteLine("3. Back");
+            Console.Write("Choose: ");
+            string option = Console.ReadLine();
 
-            if (!string.IsNullOrEmpty(search))
+            if (option == "1")
             {
-                bool found = false;
-                for (int i = 0; i < films.Length; i++)
+                Console.Write("Enter title: ");
+                string search = Console.ReadLine();
+                if (!string.IsNullOrEmpty(search))
                 {
-                    if (films[i].Title.ToLower().Contains(search.ToLower()))
+                    bool found = false;
+                    for (int i = 0; i < films.Length; i++)
                     {
-                        Console.WriteLine();
-                        films[i].DisplayInfo();
-                        found = true;
+                        if (films[i].Title.ToLower().Contains(search.ToLower()))
+                        {
+                            Console.WriteLine();
+                            films[i].DisplayInfo();
+                            found = true;
+                        }
                     }
+                    if (!found) Console.WriteLine("No films found");
                 }
-                if (!found)
+            }
+            else if (option == "2")
+            {
+                Console.Write("Enter genre (e.g. Action, Sci-Fi, Crime, Animation): ");
+                string genre = Console.ReadLine();
+                if (!string.IsNullOrEmpty(genre))
                 {
-                    Console.WriteLine("No films found matching that");
+                    bool found = false;
+                    for (int i = 0; i < films.Length; i++)
+                    {
+                        if (films[i].Genre.ToLower().Contains(genre.ToLower()))
+                        {
+                            Console.WriteLine();
+                            films[i].DisplayInfo();
+                            found = true;
+                        }
+                    }
+                    if (!found) Console.WriteLine("No films found in that genre");
                 }
             }
         }
@@ -191,7 +212,7 @@ namespace CinemaSystem
             customer.FirstName = Console.ReadLine();
             if (string.IsNullOrEmpty(customer.FirstName))
             {
-                Console.WriteLine("Name cannot be empty");
+                Console.WriteLine("Name cannot be empty.");
                 return;
             }
 
@@ -211,11 +232,11 @@ namespace CinemaSystem
                 return;
             }
 
-            // check if email already registered
+            // check if email already taken
             Customer existing = customerList.Search(c => c.Email == customer.Email);
             if (existing != null)
             {
-                Console.WriteLine("An account with that email already exists, try login instead");
+                Console.WriteLine("An account with that email already exists, login instead");
                 return;
             }
 
@@ -223,7 +244,7 @@ namespace CinemaSystem
             customer.Password = Console.ReadLine();
             if (string.IsNullOrEmpty(customer.Password) || customer.Password.Length < 4)
             {
-                Console.WriteLine("Password must be at least 4 characters.");
+                Console.WriteLine("Password must be at least 4 characters");
                 return;
             }
 
@@ -231,7 +252,7 @@ namespace CinemaSystem
             string type = Console.ReadLine();
             if (type != "Standard" && type != "Premium" && type != "VIP")
             {
-                Console.WriteLine("Invalid type, setting to Standard.");
+                Console.WriteLine("Invalid type, setting to Standard");
                 type = "Standard";
             }
             customer.MembershipType = type;
@@ -247,7 +268,7 @@ namespace CinemaSystem
             }
 
             customerList.InsertAtTail(customer);
-            Console.WriteLine($"Account created! Your customer ID is {customer.CustomerId}, you can now login.");
+            Console.WriteLine($"Account created, your customer ID is {customer.CustomerId}. You can now login.");
         }
 
         // login
@@ -340,7 +361,6 @@ namespace CinemaSystem
 
             Console.Write("Card number (16 digits): ");
             string cardNum = Console.ReadLine();
-            // validate its only numbers
             if (string.IsNullOrEmpty(cardNum) || cardNum.Length != 16 || !IsAllDigits(cardNum))
             {
                 Console.WriteLine("Invalid card number, must be 16 digits");
@@ -454,7 +474,7 @@ namespace CinemaSystem
             Console.WriteLine($"Enjoy {film.Title}!");
         }
 
-        // view ur tickets
+        // view tickets
         static void ViewMyTickets()
         {
             Console.WriteLine();
@@ -464,7 +484,7 @@ namespace CinemaSystem
 
             if (myTickets.Length == 0)
             {
-                Console.WriteLine("You have no tickets");
+                Console.WriteLine("You have no tickets.");
                 return;
             }
 
@@ -484,7 +504,7 @@ namespace CinemaSystem
             loggedInCustomer.DisplayInfo();
         }
 
-        // checks if the string is numbers only
+        // checks if string is numbers only
         static bool IsAllDigits(string str)
         {
             for (int i = 0; i < str.Length; i++)
