@@ -1,0 +1,25 @@
+@page
+@model CinemaSystem.Pages.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Login</h1>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <p class="error">@Model.ErrorMessage</p>
+}
+
+<div class="form-container">
+    <form method="post">
+        <label>Email</label>
+        <input type="email" name="Email" required />
+
+        <label>Password</label>
+        <input type="password" name="Password" required />
+
+        <button type="submit" class="btn">Login</button>
+    </form>
+    <p>Don't have an account? <a href="/Register">Register here</a></p>
+</div>
