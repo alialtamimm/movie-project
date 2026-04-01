@@ -290,3 +290,39 @@ Attended - Yes
 Completed member and booking classes
 Started DatabaseHelper.cs with ADO.NET connection and method to load films, members and bookings from SQL
 Installing Microsoft.Data.SqlClient nuget package
+
+
+-----
+Date: 01/04/2026 from 16:00 to 19:47
+Sprint Number: 5 | Web Frontend
+-----
+ 
+Name: Ali Al Tamimi
+Attended - Yes
+1. Made the console version fully working
+2. Converted the project to ASP.NET Core web app with Razor Pages, set up the layout, home page, and registration page, program.cs now uses app.Run()
+3. Had to change the csproj SDK from console to web
+ 
+Name: Mohamed Aziz Hammami
+Attended - Yes
+1. Report draft was done
+2. Went over the web conversion plan with the team
+3. None
+ 
+Name: Klejsti Carciu
+Attended - Yes
+1. Did the report sections
+2. Discussed page layout and what pages we need
+3. None
+ 
+Name: Geogios Meltzanas
+Attended - Yes
+1. All tests were passing
+2. Discussed what changes the tests might need for the web version
+3. None
+ 
+Name: Deniz Ozer
+Attended - Yes
+1. Did the model classes and database helper
+2. Added the Films browse page and login/logout pages
+3. None
