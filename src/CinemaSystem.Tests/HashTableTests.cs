@@ -84,15 +84,15 @@ namespace CinemaSystem.Tests
         public void TestMultipleInserts()
         {
             CustomHashTable<int, Film> table = new CustomHashTable<int, Film>(10);
-            Film f1 = new Film(1, "The Spectacular Now", "Drama", 148, "12A", "18:30", 12.99m);
-            Film f2 = new Film(2, "One Day", "Romance", 152, "12A", "20:00", 14.99m);
+            Film f1 = new Film(1, "Inception", "Sci-Fi", 148, "12A", "18:30", 12.99m);
+            Film f2 = new Film(2, "Batman", "Action", 152, "12A", "20:00", 14.99m);
 
             table.Insert(f1.FilmId, f1);
             table.Insert(f2.FilmId, f2);
 
             Assert.AreEqual(2, table.Count);
-            Assert.AreEqual("The Spectacular Now", table.Search(1).Title);
-            Assert.AreEqual("One Day", table.Search(2).Title);
+            Assert.AreEqual("Inception", table.Search(1).Title);
+            Assert.AreEqual("Batman", table.Search(2).Title);
         }
 
         [TestMethod]
