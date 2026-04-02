@@ -1,0 +1,43 @@
+@page
+@model CinemaSystem.Pages.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Register</h1>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <p class="error">@Model.ErrorMessage</p>
+}
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <p class="success">@Model.SuccessMessage</p>
+}
+
+<div class="form-container">
+    <form method="post">
+        <label>First Name</label>
+        <input type="text" name="FirstName" required />
+
+        <label>Last Name</label>
+        <input type="text" name="LastName" required />
+
+        <label>Email</label>
+        <input type="email" name="Email" required />
+
+        <label>Password</label>
+        <input type="password" name="Password" required minlength="4" />
+
+        <label>Membership Type</label>
+        <select name="MembershipType">
+            <option value="Standard">Standard (No discount)</option>
+            <option value="Premium">Premium (10% discount)</option>
+            <option value="VIP">VIP (20% discount)</option>
+        </select>
+
+        <button type="submit" class="btn">Register</button>
+    </form>
+    <p>Already have an account? <a href="/Login">Login here</a></p>
+</div>
