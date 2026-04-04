@@ -1,0 +1,28 @@
+@page
+@model CinemaSystem.Pages.MyTicketsModel
+@{
+    ViewData["Title"] = "My Tickets";
+}
+
+<h1>My Tickets</h1>
+
+@if (Model.Tickets.Length == 0)
+{
+    <p>You haven't purchased any tickets yet.</p>
+    <a href="/Films" class="btn">Browse Films</a>
+}
+else
+{
+    <div class="ticket-grid">
+        @foreach (var ticket in Model.Tickets)
+        {
+            <div class="ticket-card">
+                <h3>@ticket.FilmTitle</h3>
+                <p><strong>Ticket ID:</strong> #@ticket.TicketId</p>
+                <p><strong>Seat:</strong> @ticket.SeatNumber</p>
+                <p><strong>Price:</strong> Â£@ticket.Price.ToString("F2")</p>
+                <p><strong>Purchased:</strong> @ticket.PurchaseDate.ToShortDateString()</p>
+            </div>
+        }
+    </div>
+}
