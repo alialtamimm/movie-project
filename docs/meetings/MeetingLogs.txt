@@ -326,3 +326,39 @@ Attended - Yes
 1. Did the model classes and database helper
 2. Added the Films browse page and login/logout pages
 3. None
+
+
+-----
+Date: 04/04/2026 from 15:20 to 20:04
+Sprint Number: 5 | Polish and Submit
+-----
+ 
+Name: Ali Al Tamimi
+Attended - Yes
+1. Fixed remaining bugs in the system
+2. Completed the buy ticket page and site
+3. None
+ 
+Name: Mohamed Aziz Hammami
+Attended - Yes
+1. Updated the project report
+2. Exported the final report as PDF and committed it to the repo
+3. None
+ 
+Name: Klejsti Carciu
+Attended - Yes
+1. Reviewed the report
+2. Did final check on all meeting minutes, made sure everything is there
+3. None
+ 
+Name: Geogios Meltzanas
+Attended - Yes
+1. Did additional testing
+2. Will record demo video tomorrow
+3. None
+ 
+Name: Deniz Ozer
+Attended - Yes
+1. Reviewed past code for warnings or errors
+2. Finished up Account and Mytickets pages
+3. None
