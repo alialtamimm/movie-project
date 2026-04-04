@@ -1,0 +1,86 @@
+@page
+@model CinemaSystem.Pages.BuyTicketModel
+@{
+    ViewData["Title"] = "Buy Ticket";
+}
+
+<h1>Buy Ticket</h1>
+
+@if (Model.SelectedFilm != null)
+{
+    <div class="film-detail">
+        <h2>@Model.SelectedFilm.Title</h2>
+        <p><strong>Genre:</strong> @Model.SelectedFilm.Genre</p>
+        <p><strong>Showtime:</strong> @Model.SelectedFilm.ShowTime</p>
+        <p><strong>Duration:</strong> @Model.SelectedFilm.Duration mins</p>
+        <p><strong>Price:</strong> £@Model.SelectedFilm.Price.ToString("F2")</p>
+        @if (Model.Discount > 0)
+        {
+            <p><strong>Your discount:</strong> @(Model.Discount * 100)%</p>
+            <p><strong>Final price:</strong> £@Model.FinalPrice.ToString("F2")</p>
+        }
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <p class="error">@Model.ErrorMessage</p>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+        <p class="success">@Model.SuccessMessage</p>
+    }
+    else
+    {
+        <div class="form-container">
+            <form method="post">
+                <input type="hidden" name="FilmId" value="@Model.SelectedFilm.FilmId" />
+
+                <h3>Seat Selection</h3>
+                <label>Seat Number (1-50)</label>
+                <input type="number" name="SeatNumber" min="1" max="50" required />
+
+                <h3>Payment Details</h3>
+                <label>Card Number (16 digits)</label>
+                <input type="text" name="CardNumber" pattern="[0-9]{16}" maxlength="16" 
+                       title="Must be 16 digits" required 
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+
+                <div class="form-row">
+                    <div>
+                        <label>Expiry Month (1-12)</label>
+                        <input type="number" name="ExpiryMonth" min="1" max="12" required />
+                    </div>
+                    <div>
+                        <label>Expiry Year</label>
+                        <input type="number" name="ExpiryYear" min="2026" max="2035" required />
+                    </div>
+                </div>
+
+                <label>CVV (3 digits)</label>
+                <input type="text" name="CVV" pattern="[0-9]{3}" maxlength="3" 
+                       title="Must be 3 digits" required 
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+
+                <h3>Billing Address</h3>
+                <label>Address Line</label>
+                <input type="text" name="AddressLine" required />
+
+                <label>City</label>
+                <input type="text" name="City" required />
+
+                <label>Country</label>
+                <input type="text" name="Country" required />
+
+                <label>Postcode</label>
+                <input type="text" name="Postcode" required />
+
+                <button type="submit" class="btn">Confirm Purchase</button>
+            </form>
+        </div>
+    }
+}
+else
+{
+    <p>Film not found. <a href="/Films">Go back to films</a></p>
+}

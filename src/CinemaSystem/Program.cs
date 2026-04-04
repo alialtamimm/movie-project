@@ -1,17 +1,14 @@
 ﻿using CinemaSystem.Models;
 using CinemaSystem.DataStructures;
-using CinemaSystem.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 
-// store our data structures as singletons so all pages can use them
 builder.Services.AddSingleton<CustomHashTable<int, Film>>(new CustomHashTable<int, Film>(20));
 builder.Services.AddSingleton<CustomLinkedList<Customer>>(new CustomLinkedList<Customer>());
 builder.Services.AddSingleton<CustomLinkedList<Ticket>>(new CustomLinkedList<Ticket>());
 
-// add session for login
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -21,7 +18,6 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// load sample films into the hash table on startup
 var filmTable = app.Services.GetRequiredService<CustomHashTable<int, Film>>();
 LoadSampleFilms(filmTable);
 
@@ -32,7 +28,6 @@ app.MapRazorPages();
 
 app.Run();
 
-// loads films into the hash table
 void LoadSampleFilms(CustomHashTable<int, Film> table)
 {
     table.Insert(1, new Film(1, "Inception", "Sci-Fi", 148, "12A", "14:00", 12.99m, 50));
