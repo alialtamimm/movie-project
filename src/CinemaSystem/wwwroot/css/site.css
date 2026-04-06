@@ -387,12 +387,9 @@ body {
 }
 
 .feature-card {
-    background: #12121f;
+    background: transparent;
     padding: 35px 25px;
     text-align: center;
-    border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-    border-left: 4px solid #b91c1c;
     transition: transform 0.2s;
 }
 

@@ -88,6 +88,7 @@ namespace CinemaSystem.Data
                     t.SeatNumber = (int)reader["SeatNumber"];
                     t.Price = (decimal)reader["Price"];
                     t.PurchaseDate = (DateTime)reader["PurchaseDate"];
+                    t.PosterUrl = reader["PosterUrl"] == DBNull.Value ? "" : reader["PosterUrl"].ToString();
 
                     ticketList.InsertAtTail(t);
                 }
@@ -122,16 +123,17 @@ namespace CinemaSystem.Data
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                string query = "INSERT INTO Tickets (CustomerId, FilmId, FilmTitle, SeatNumber, Price, " +
-                               "CardNumber, ExpiryMonth, ExpiryYear, CVV, AddressLine, City, Country, Postcode) " +
-                               "VALUES (@custId, @filmId, @filmTitle, @seat, @price, " +
-                               "@card, @expMonth, @expYear, @cvv, @addr, @city, @country, @postcode); " +
-                               "SELECT SCOPE_IDENTITY();";
+                string query = "INSERT INTO Tickets (CustomerId, FilmId, FilmTitle, PosterUrl, SeatNumber, Price, " +
+                                "CardNumber, ExpiryMonth, ExpiryYear, CVV, AddressLine, City, Country, Postcode) " +
+                                "VALUES (@custId, @filmId, @filmTitle, @poster, @seat, @price, " +
+                                "@card, @expMonth, @expYear, @cvv, @addr, @city, @country, @postcode); " +
+                                "SELECT SCOPE_IDENTITY();";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@custId", ticket.CustomerId);
                 cmd.Parameters.AddWithValue("@filmId", ticket.FilmId);
                 cmd.Parameters.AddWithValue("@filmTitle", ticket.FilmTitle);
+                cmd.Parameters.AddWithValue("@poster", ticket.PosterUrl);
                 cmd.Parameters.AddWithValue("@seat", ticket.SeatNumber);
                 cmd.Parameters.AddWithValue("@price", ticket.Price);
                 cmd.Parameters.AddWithValue("@card", ticket.CardNumber);
