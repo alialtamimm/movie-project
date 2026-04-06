@@ -7,3 +7,10 @@ Roles:
 - Developer: Ali Al Tamimi M01042238
 - Developer: Deniz Ozer M01027961
 - Tester: Georgios Meltzanas M01031178
+
+How to Run:
+1. Open SQL Server Management Studio, connect to (localdb)\MSSQLLocalDB
+2. Run the script in database/create_database.sql
+3. In the terminal, navigate to src/CinemaSystem and run:
+   dotnet run
+4. Open http://localhost:5000 in your browser
