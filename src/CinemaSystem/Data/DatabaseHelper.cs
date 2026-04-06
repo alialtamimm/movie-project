@@ -35,7 +35,8 @@ namespace CinemaSystem.Data
                     film.ShowTime = reader["ShowTime"].ToString();
                     film.Price = (decimal)reader["Price"];
                     film.AvailableSeats = (int)reader["AvailableSeats"];
-
+                    film.PosterUrl = reader["PosterUrl"].ToString();
+                    
                     filmTable.Insert(film.FilmId, film);
                 }
             }

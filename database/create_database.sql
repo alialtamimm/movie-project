@@ -15,7 +15,8 @@ CREATE TABLE Films (
     Rating NVARCHAR(10),
     ShowTime NVARCHAR(10),
     Price DECIMAL(5,2),
-    AvailableSeats INT DEFAULT 50
+    AvailableSeats INT DEFAULT 50,
+    PosterUrl NVARCHAR(200)
 );
 
 CREATE TABLE Customers (
@@ -47,12 +48,12 @@ CREATE TABLE Tickets (
 );
 
 -- sample films
-INSERT INTO Films (Title, Genre, Duration, Rating, ShowTime, Price, AvailableSeats) VALUES
-('Inception', 'Sci-Fi', 148, '12A', '14:00', 12.99, 50),
-('The Dark Knight', 'Action', 152, '12A', '17:00', 13.99, 50),
-('Interstellar', 'Sci-Fi', 169, '12A', '20:00', 14.99, 50),
-('The Godfather', 'Crime', 175, '18', '21:00', 11.99, 50),
-('Pulp Fiction', 'Crime', 154, '18', '22:00', 11.99, 50),
-('Toy Story', 'Animation', 81, 'PG', '11:00', 8.99, 50),
-('Finding Nemo', 'Animation', 100, 'U', '13:00', 8.99, 50),
-('Avengers Endgame', 'Action', 181, '12A', '18:30', 15.99, 50);
+INSERT INTO Films (Title, Genre, Duration, Rating, ShowTime, Price, AvailableSeats, PosterUrl) VALUES
+('Inception', 'Sci-Fi', 148, '12A', '14:00', 12.99, 50, '/images/inception.jpg'),
+('The Dark Knight', 'Action', 152, '12A', '17:00', 13.99, 50, '/images/darkknight.jpg'),
+('Interstellar', 'Sci-Fi', 169, '12A', '20:00', 14.99, 50, '/images/interstellar.jpg'),
+('The Godfather', 'Crime', 175, '18', '21:00', 11.99, 50, '/images/godfather.jpg'),
+('Pulp Fiction', 'Crime', 154, '18', '22:00', 11.99, 50, '/images/pulpfiction.jpg'),
+('Toy Story', 'Animation', 81, 'PG', '11:00', 8.99, 50, '/images/toystory.jpg'),
+('Finding Nemo', 'Animation', 100, 'U', '13:00', 8.99, 50, '/images/findingnemo.jpg'),
+('Avengers Endgame', 'Action', 181, '12A', '18:30', 15.99, 50, '/images/avengers.jpg');
