@@ -84,8 +84,8 @@ namespace CinemaSystem.Tests
         public void TestMultipleInserts()
         {
             CustomHashTable<int, Film> table = new CustomHashTable<int, Film>(10);
-            Film f1 = new Film(1, "Inception", "Sci-Fi", 148, "12A", "18:30", 12.99m);
-            Film f2 = new Film(2, "Batman", "Action", 152, "12A", "20:00", 14.99m);
+            Film f1 = new Film(1, "Inception", "Sci-Fi", 148, "12A", "18:30", 12.99m, 50);
+            Film f2 = new Film(2, "Batman", "Action", 152, "12A", "20:00", 14.99m, 50);
 
             table.Insert(f1.FilmId, f1);
             table.Insert(f2.FilmId, f2);
