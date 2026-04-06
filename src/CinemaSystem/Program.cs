@@ -11,6 +11,10 @@ builder.Services.AddSingleton<CustomHashTable<int, Film>>(new CustomHashTable<in
 builder.Services.AddSingleton<CustomLinkedList<Customer>>(new CustomLinkedList<Customer>());
 builder.Services.AddSingleton<CustomLinkedList<Ticket>>(new CustomLinkedList<Ticket>());
 
+// register the database helper as a service so pages can use it
+string connString = @"Server=(localdb)\MSSQLLocalDB;Database=CinemaDB;Trusted_Connection=True;TrustServerCertificate=True;";
+builder.Services.AddSingleton<DatabaseHelper>(new DatabaseHelper(connString));
+
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -23,11 +27,9 @@ var app = builder.Build();
 var filmTable = app.Services.GetRequiredService<CustomHashTable<int, Film>>();
 var customerList = app.Services.GetRequiredService<CustomLinkedList<Customer>>();
 var ticketList = app.Services.GetRequiredService<CustomLinkedList<Ticket>>();
+var db = app.Services.GetRequiredService<DatabaseHelper>();
 
 // try loading data from the sql database
-string connString = @"Server=(localdb)\MSSQLLocalDB;Database=CinemaDB;Trusted_Connection=True;TrustServerCertificate=True;";
-DatabaseHelper db = new DatabaseHelper(connString);
-
 try
 {
     db.LoadFilms(filmTable);

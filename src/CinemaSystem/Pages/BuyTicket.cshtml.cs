@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Http;
 using CinemaSystem.Models;
 using CinemaSystem.DataStructures;
+using CinemaSystem.Data;
 
 namespace CinemaSystem.Pages
 {
@@ -10,6 +11,7 @@ namespace CinemaSystem.Pages
     {
         private readonly CustomHashTable<int, Film> _filmTable;
         private readonly CustomLinkedList<Ticket> _ticketList;
+        private readonly DatabaseHelper _db;
 
         public Film SelectedFilm { get; set; }
         public decimal Discount { get; set; }
@@ -17,10 +19,11 @@ namespace CinemaSystem.Pages
         public string ErrorMessage { get; set; } = "";
         public string SuccessMessage { get; set; } = "";
 
-        public BuyTicketModel(CustomHashTable<int, Film> filmTable, CustomLinkedList<Ticket> ticketList)
+        public BuyTicketModel(CustomHashTable<int, Film> filmTable, CustomLinkedList<Ticket> ticketList, DatabaseHelper db)
         {
             _filmTable = filmTable;
             _ticketList = ticketList;
+            _db = db;
         }
 
         public IActionResult OnGet(int filmId)
@@ -106,7 +109,6 @@ namespace CinemaSystem.Pages
             int customerId = HttpContext.Session.GetInt32("CustomerId") ?? 0;
 
             Ticket ticket = new Ticket();
-            ticket.TicketId = _ticketList.Count + 1;
             ticket.CustomerId = customerId;
             ticket.FilmId = FilmId;
             ticket.FilmTitle = SelectedFilm.Title;
@@ -121,6 +123,17 @@ namespace CinemaSystem.Pages
             ticket.City = City;
             ticket.Country = Country;
             ticket.Postcode = Postcode;
+
+            // save to database first to get the new id
+            try
+            {
+                int newId = _db.AddTicket(ticket);
+                ticket.TicketId = newId;
+            }
+            catch (Exception)
+            {
+                ticket.TicketId = _ticketList.Count + 1;
+            }
 
             _ticketList.InsertAtTail(ticket);
             SelectedFilm.AvailableSeats--;

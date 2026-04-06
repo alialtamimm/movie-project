@@ -2,19 +2,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CinemaSystem.Models;
 using CinemaSystem.DataStructures;
+using CinemaSystem.Data;
 
 namespace CinemaSystem.Pages
 {
     public class RegisterModel : PageModel
     {
         private readonly CustomLinkedList<Customer> _customerList;
+        private readonly DatabaseHelper _db;
 
         public string ErrorMessage { get; set; } = "";
         public string SuccessMessage { get; set; } = "";
 
-        public RegisterModel(CustomLinkedList<Customer> customerList)
+        public RegisterModel(CustomLinkedList<Customer> customerList, DatabaseHelper db)
         {
             _customerList = customerList;
+            _db = db;
         }
 
         public void OnGet()
@@ -24,11 +27,14 @@ namespace CinemaSystem.Pages
         public IActionResult OnPost(string FirstName, string LastName, string Email, string Password, string MembershipType)
         {
             // check if email already taken
-            Customer existing = _customerList.Search(c => c.Email == Email);
-            if (existing != null)
+            Customer[] allCustomers = _customerList.ToArray();
+            for (int i = 0; i < allCustomers.Length; i++)
             {
-                ErrorMessage = "An account with that email already exists.";
-                return Page();
+                if (allCustomers[i].Email == Email)
+                {
+                    ErrorMessage = "An account with that email already exists.";
+                    return Page();
+                }
             }
 
             if (string.IsNullOrEmpty(Password) || Password.Length < 4)
@@ -38,12 +44,29 @@ namespace CinemaSystem.Pages
             }
 
             Customer customer = new Customer();
-            customer.CustomerId = _customerList.Count + 1;
             customer.FirstName = FirstName;
             customer.LastName = LastName;
             customer.Email = Email;
             customer.Password = Password;
-            customer.MembershipType = MembershipType ?? "Standard";
+            if (MembershipType == null)
+            {
+                customer.MembershipType = "Standard";
+            }
+            else
+            {
+                customer.MembershipType = MembershipType;
+            }
+
+            // save to database first to get the new id
+            try
+            {
+                int newId = _db.AddCustomer(customer);
+                customer.CustomerId = newId;
+            }
+            catch (Exception)
+            {
+                customer.CustomerId = _customerList.Count + 1;
+            }
 
             _customerList.InsertAtTail(customer);
 
