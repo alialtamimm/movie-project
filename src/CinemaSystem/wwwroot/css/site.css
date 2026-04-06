@@ -409,6 +409,15 @@ body {
     line-height: 1.5;
 }
 
+.btn-danger {
+    background: linear-gradient(135deg, #4a4a55 0%, #2d2d3a 100%);
+    color: #e4e4e4;
+}
+
+.btn-danger:hover {
+    box-shadow: 0 5px 15px rgba(74,74,85,0.4);
+}
+
 /* footer */
 footer {
     text-align: center;

@@ -14,5 +14,9 @@
         <p><strong>Membership:</strong> @Model.CurrentCustomer.MembershipType</p>
         <p><strong>Discount:</strong> @(Model.CurrentCustomer.GetDiscount() * 100)%</p>
         <p><strong>Joined:</strong> @Model.CurrentCustomer.JoinDate.ToShortDateString()</p>
+
+        <form method="post" style="margin-top: 25px;" onsubmit="return confirm('Are you sure you want to delete your account? This will delete all your tickets too and cannot be undone.');">
+            <button type="submit" class="btn btn-danger">Delete Account</button>
+        </form>
     </div>
 }

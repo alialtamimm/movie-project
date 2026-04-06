@@ -149,5 +149,25 @@ namespace CinemaSystem.Data
                 return newId;
             }
         }
+        // delete a customer and all their tickets
+public void DeleteCustomer(int customerId)
+{
+    using (SqlConnection conn = new SqlConnection(connectionString))
+    {
+        conn.Open();
+        // delete tickets first because of foreign key
+        string deleteTickets = "DELETE FROM Tickets WHERE CustomerId = @id";
+        SqlCommand cmd1 = new SqlCommand(deleteTickets, conn);
+        cmd1.Parameters.AddWithValue("@id", customerId);
+        cmd1.ExecuteNonQuery();
+
+        // then delete the customer
+        string deleteCustomer = "DELETE FROM Customers WHERE CustomerId = @id";
+        SqlCommand cmd2 = new SqlCommand(deleteCustomer, conn);
+        cmd2.Parameters.AddWithValue("@id", customerId);
+        cmd2.ExecuteNonQuery();
     }
+}
+    }
+    
 }
