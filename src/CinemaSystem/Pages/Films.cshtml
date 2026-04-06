@@ -1,0 +1,49 @@
+@page
+@model CinemaSystem.Pages.FilmsModel
+@{
+    ViewData["Title"] = "Films";
+}
+
+<h1>Available Films</h1>
+
+<div class="search-bar">
+    <form method="get">
+        <input type="text" name="search" placeholder="Search by title..." value="@Model.SearchTerm" />
+        <select name="genre">
+            <option value="">All Genres</option>
+            <option value="Action" selected="@(Model.GenreFilter == "Action")">Action</option>
+            <option value="Sci-Fi" selected="@(Model.GenreFilter == "Sci-Fi")">Sci-Fi</option>
+            <option value="Crime" selected="@(Model.GenreFilter == "Crime")">Crime</option>
+            <option value="Animation" selected="@(Model.GenreFilter == "Animation")">Animation</option>
+        </select>
+        <button type="submit" class="btn">Search</button>
+    </form>
+</div>
+
+<div class="film-grid">
+    @foreach (var film in Model.Films)
+    {
+        <div class="film-card">
+            <h3>@film.Title</h3>
+            <p><strong>Genre:</strong> @film.Genre</p>
+            <p><strong>Duration:</strong> @film.Duration mins</p>
+            <p><strong>Rating:</strong> @film.Rating</p>
+            <p><strong>Showtime:</strong> @film.ShowTime</p>
+            <p><strong>Seats left:</strong> @film.AvailableSeats</p>
+            <p class="price">Â£@film.Price.ToString("F2")</p>
+            @if (Context.Session.GetString("CustomerEmail") != null)
+            {
+                <a href="/BuyTicket?filmId=@film.FilmId" class="btn">Buy Ticket</a>
+            }
+            else
+            {
+                <a href="/Login" class="btn">Login to Book</a>
+            }
+        </div>
+    }
+</div>
+
+@if (!Model.Films.Any())
+{
+    <p>No films found.</p>
+}
