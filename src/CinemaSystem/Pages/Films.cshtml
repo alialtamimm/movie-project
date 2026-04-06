@@ -31,7 +31,7 @@
             <p><strong>Showtime:</strong> @film.ShowTime</p>
             <p><strong>Seats left:</strong> @film.AvailableSeats</p>
             <p class="price">£@film.Price.ToString("F2")</p>
-            @if (Context.Session.GetString("CustomerEmail") != null)
+            @if (HttpContext.Session.GetString("CustomerEmail") != null)
             {
                 <a href="/BuyTicket?filmId=@film.FilmId" class="btn">Buy Ticket</a>
             }

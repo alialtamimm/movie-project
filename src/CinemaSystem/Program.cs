@@ -4,6 +4,7 @@ using CinemaSystem.DataStructures;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSingleton<CustomHashTable<int, Film>>(new CustomHashTable<int, Film>(20));
 builder.Services.AddSingleton<CustomLinkedList<Customer>>(new CustomLinkedList<Customer>());
