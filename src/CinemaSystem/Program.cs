@@ -29,14 +29,15 @@ app.MapRazorPages();
 
 app.Run();
 
+// load sample films on startup
 void LoadSampleFilms(CustomHashTable<int, Film> table)
 {
-    table.Insert(1, new Film(1, "Inception", "Sci-Fi", 148, "12A", "14:00", 12.99m, 50));
-    table.Insert(2, new Film(2, "The Dark Knight", "Action", 152, "12A", "17:00", 13.99m, 50));
-    table.Insert(3, new Film(3, "Interstellar", "Sci-Fi", 169, "12A", "20:00", 14.99m, 50));
-    table.Insert(4, new Film(4, "The Godfather", "Crime", 175, "18", "21:00", 11.99m, 50));
-    table.Insert(5, new Film(5, "Pulp Fiction", "Crime", 154, "18", "22:00", 11.99m, 50));
-    table.Insert(6, new Film(6, "Toy Story", "Animation", 81, "PG", "11:00", 8.99m, 50));
-    table.Insert(7, new Film(7, "Finding Nemo", "Animation", 100, "U", "13:00", 8.99m, 50));
-    table.Insert(8, new Film(8, "Avengers Endgame", "Action", 181, "12A", "18:30", 15.99m, 50));
+    table.Insert(1, new Film(1, "Inception", "Sci-Fi", 148, "12A", "14:00", 12.99m, 50, "/images/inception.jpg"));
+    table.Insert(2, new Film(2, "The Dark Knight", "Action", 152, "12A", "17:00", 13.99m, 50, "/images/darkknight.jpg"));
+    table.Insert(3, new Film(3, "Interstellar", "Sci-Fi", 169, "12A", "20:00", 14.99m, 50, "/images/interstellar.jpg"));
+    table.Insert(4, new Film(4, "The Godfather", "Crime", 175, "18", "21:00", 11.99m, 50, "/images/godfather.jpg"));
+    table.Insert(5, new Film(5, "Pulp Fiction", "Crime", 154, "18", "22:00", 11.99m, 50, "/images/pulpfiction.jpg"));
+    table.Insert(6, new Film(6, "Toy Story", "Animation", 81, "PG", "11:00", 8.99m, 50, "/images/toystory.jpg"));
+    table.Insert(7, new Film(7, "Finding Nemo", "Animation", 100, "U", "13:00", 8.99m, 50, "/images/findingnemo.jpg"));
+    table.Insert(8, new Film(8, "Avengers Endgame", "Action", 181, "12A", "18:30", 15.99m, 50, "/images/avengers.jpg"));
 }

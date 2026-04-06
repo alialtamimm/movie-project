@@ -8,6 +8,7 @@ namespace CinemaSystem.Models
         public int CustomerId { get; set; }
         public int FilmId { get; set; }
         public string FilmTitle { get; set; }
+        public string PosterUrl { get; set; }
         public int SeatNumber { get; set; }
         public decimal Price { get; set; }
         public DateTime PurchaseDate { get; set; }
@@ -27,6 +28,7 @@ namespace CinemaSystem.Models
         public Ticket()
         {
             FilmTitle = "";
+            PosterUrl = "";
             CardNumber = "";
             CVV = "";
             AddressLine = "";
@@ -42,6 +44,7 @@ namespace CinemaSystem.Models
             CustomerId = customerId;
             FilmId = filmId;
             FilmTitle = filmTitle;
+            PosterUrl = "";
             SeatNumber = seat;
             Price = price;
             PurchaseDate = DateTime.Now;

@@ -17,10 +17,11 @@ else
         @foreach (var ticket in Model.Tickets)
         {
             <div class="ticket-card">
+                <img src="@ticket.PosterUrl" alt="@ticket.FilmTitle" class="ticket-poster" onerror="this.style.display='none'" />
                 <h3>@ticket.FilmTitle</h3>
                 <p><strong>Ticket ID:</strong> #@ticket.TicketId</p>
                 <p><strong>Seat:</strong> @ticket.SeatNumber</p>
-                <p><strong>Price:</strong> Â£@ticket.Price.ToString("F2")</p>
+                <p><strong>Price:</strong> £@ticket.Price.ToString("F2")</p>
                 <p><strong>Purchased:</strong> @ticket.PurchaseDate.ToShortDateString()</p>
             </div>
         }

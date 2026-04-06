@@ -8,10 +8,11 @@ namespace CinemaSystem.Models
         public string Title { get; set; }
         public string Genre { get; set; }
         public int Duration { get; set; } // minutes
-        public string Rating { get; set; } // pg, 12a, 15, 18
+        public string Rating { get; set; } // PG, 12A, 15, 18
         public string ShowTime { get; set; }
         public decimal Price { get; set; }
         public int AvailableSeats { get; set; }
+        public string PosterUrl { get; set; }
 
         public Film()
         {
@@ -19,6 +20,7 @@ namespace CinemaSystem.Models
             Genre = "";
             Rating = "";
             ShowTime = "";
+            PosterUrl = "";
             AvailableSeats = 50;
         }
 
@@ -32,6 +34,20 @@ namespace CinemaSystem.Models
             ShowTime = showTime;
             Price = price;
             AvailableSeats = seats;
+            PosterUrl = "";
+        }
+
+        public Film(int filmId, string title, string genre, int duration, string rating, string showTime, decimal price, int seats, string posterUrl)
+        {
+            FilmId = filmId;
+            Title = title;
+            Genre = genre;
+            Duration = duration;
+            Rating = rating;
+            ShowTime = showTime;
+            Price = price;
+            AvailableSeats = seats;
+            PosterUrl = posterUrl;
         }
 
         // prints film info to the console
@@ -52,7 +68,7 @@ namespace CinemaSystem.Models
             return $"{Title} ({Genre}) - {ShowTime} - £{Price:F2}";
         }
 
-        // need for the hash table to compare films
+        // need this so the hash table can compare films
         public override bool Equals(object obj)
         {
             if (obj is Film other)

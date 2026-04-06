@@ -27,7 +27,6 @@ namespace CinemaSystem.Pages
 
         public IActionResult OnGet(int filmId)
         {
-            // check if logged in
             if (HttpContext.Session.GetString("CustomerEmail") == null)
             {
                 return RedirectToPage("/Login");
@@ -113,6 +112,7 @@ namespace CinemaSystem.Pages
             ticket.CustomerId = customerId;
             ticket.FilmId = FilmId;
             ticket.FilmTitle = SelectedFilm.Title;
+            ticket.PosterUrl = SelectedFilm.PosterUrl;
             ticket.SeatNumber = SeatNumber;
             ticket.Price = FinalPrice;
             ticket.CardNumber = CardNumber;
