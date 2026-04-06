@@ -9,7 +9,7 @@ namespace CinemaSystem.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string MembershipType { get; set; } // standart, premium, vip
+        public string MembershipType { get; set; } // Standard, Premium, VIP
         public DateTime JoinDate { get; set; }
 
         public Customer()
@@ -33,27 +33,18 @@ namespace CinemaSystem.Models
             JoinDate = DateTime.Now;
         }
 
-        // returns discount based on membership type
+        // returns discount based on membership
         public decimal GetDiscount()
         {
             switch (MembershipType)
             {
                 case "Premium":
-                    return 0.10m;
+                    return 0.10m; // 10% off
                 case "VIP":
-                    return 0.20m;
+                    return 0.20m; // 20% off
                 default:
-                    return 0.00m; // no discount for standart
+                    return 0.00m; // no discount
             }
-        }
-
-        public void DisplayInfo()
-        {
-            Console.WriteLine($"  Name: {FirstName} {LastName}");
-            Console.WriteLine($"  Email: {Email}");
-            Console.WriteLine($"  Membership: {MembershipType}");
-            Console.WriteLine($"  Discount: {GetDiscount() * 100}%");
-            Console.WriteLine($"  Joined: {JoinDate.ToShortDateString()}");
         }
 
         public override string ToString()

@@ -1,158 +1,58 @@
-using System;
-using Microsoft.Data.SqlClient;
-using CinemaSystem.Models;
-using CinemaSystem.DataStructures;
+-- Cinema Film Booking and Membership System
+-- Database creation script
 
-namespace CinemaSystem.Data
-{
-    public class DatabaseHelper
-    {
-        private string connectionString;
+CREATE DATABASE CinemaDB;
+GO
 
-        public DatabaseHelper(string connString)
-        {
-            connectionString = connString;
-        }
+USE CinemaDB;
+GO
 
-        // load all films from db into the hash table
-        public void LoadFilms(CustomHashTable<int, Film> filmTable)
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                string query = "SELECT * FROM Films";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
+CREATE TABLE Films (
+    FilmId INT PRIMARY KEY IDENTITY(1,1),
+    Title NVARCHAR(100) NOT NULL,
+    Genre NVARCHAR(50),
+    Duration INT,
+    Rating NVARCHAR(10),
+    ShowTime NVARCHAR(10),
+    Price DECIMAL(5,2),
+    AvailableSeats INT DEFAULT 50
+);
 
-                while (reader.Read())
-                {
-                    Film film = new Film();
-                    film.FilmId = (int)reader["FilmId"];
-                    film.Title = reader["Title"].ToString();
-                    film.Genre = reader["Genre"].ToString();
-                    film.Duration = (int)reader["Duration"];
-                    film.Rating = reader["Rating"].ToString();
-                    film.ShowTime = reader["ShowTime"].ToString();
-                    film.Price = (decimal)reader["Price"];
-                    film.AvailableSeats = (int)reader["AvailableSeats"];
+CREATE TABLE Customers (
+    CustomerId INT PRIMARY KEY IDENTITY(1,1),
+    FirstName NVARCHAR(50) NOT NULL,
+    LastName NVARCHAR(50) NOT NULL,
+    Email NVARCHAR(100) NOT NULL,
+    Password NVARCHAR(100) NOT NULL,
+    MembershipType NVARCHAR(20) DEFAULT 'Standard',
+    JoinDate DATE DEFAULT GETDATE()
+);
 
-                    filmTable.Insert(film.FilmId, film);
-                }
-            }
-        }
+CREATE TABLE Tickets (
+    TicketId INT PRIMARY KEY IDENTITY(1,1),
+    CustomerId INT FOREIGN KEY REFERENCES Customers(CustomerId),
+    FilmId INT FOREIGN KEY REFERENCES Films(FilmId),
+    FilmTitle NVARCHAR(100),
+    SeatNumber INT,
+    Price DECIMAL(6,2),
+    PurchaseDate DATETIME DEFAULT GETDATE(),
+    CardNumber NVARCHAR(16),
+    ExpiryMonth INT,
+    ExpiryYear INT,
+    CVV NVARCHAR(3),
+    AddressLine NVARCHAR(200),
+    City NVARCHAR(100),
+    Country NVARCHAR(100),
+    Postcode NVARCHAR(20)
+);
 
-        // load all customers
-        public void LoadCustomers(CustomLinkedList<Customer> customerList)
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                string query = "SELECT * FROM Customers";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    Customer c = new Customer();
-                    c.CustomerId = (int)reader["CustomerId"];
-                    c.FirstName = reader["FirstName"].ToString();
-                    c.LastName = reader["LastName"].ToString();
-                    c.Email = reader["Email"].ToString();
-                    c.Password = reader["Password"].ToString();
-                    c.MembershipType = reader["MembershipType"].ToString();
-                    c.JoinDate = (DateTime)reader["JoinDate"];
-
-                    customerList.InsertAtTail(c);
-                }
-            }
-        }
-
-        // load all tickets
-        public void LoadTickets(CustomLinkedList<Ticket> ticketList)
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                string query = "SELECT * FROM Tickets";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    Ticket t = new Ticket();
-                    t.TicketId = (int)reader["TicketId"];
-                    t.CustomerId = (int)reader["CustomerId"];
-                    t.FilmId = (int)reader["FilmId"];
-                    t.FilmTitle = reader["FilmTitle"].ToString();
-                    t.SeatNumber = (int)reader["SeatNumber"];
-                    t.Price = (decimal)reader["Price"];
-                    t.PurchaseDate = (DateTime)reader["PurchaseDate"];
-                    t.CardNumber = reader["CardNumber"].ToString();
-                    t.ExpiryMonth = (int)reader["ExpiryMonth"];
-                    t.ExpiryYear = (int)reader["ExpiryYear"];
-                    t.CVV = reader["CVV"].ToString();
-                    t.AddressLine = reader["AddressLine"].ToString();
-                    t.City = reader["City"].ToString();
-                    t.Country = reader["Country"].ToString();
-                    t.Postcode = reader["Postcode"].ToString();
-
-                    ticketList.InsertAtTail(t);
-                }
-            }
-        }
-
-        // register a new customer
-        public int AddCustomer(Customer customer)
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                string query = "INSERT INTO Customers (FirstName, LastName, Email, Password, MembershipType) " +
-                               "VALUES (@fname, @lname, @email, @password, @type); " +
-                               "SELECT SCOPE_IDENTITY();";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@fname", customer.FirstName);
-                cmd.Parameters.AddWithValue("@lname", customer.LastName);
-                cmd.Parameters.AddWithValue("@email", customer.Email);
-                cmd.Parameters.AddWithValue("@password", customer.Password);
-                cmd.Parameters.AddWithValue("@type", customer.MembershipType);
-
-                int newId = Convert.ToInt32(cmd.ExecuteScalar());
-                return newId;
-            }
-        }
-
-        // save a new ticket
-        public int AddTicket(Ticket ticket)
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                string query = "INSERT INTO Tickets (CustomerId, FilmId, FilmTitle, SeatNumber, Price, " +
-                               "CardNumber, ExpiryMonth, ExpiryYear, CVV, AddressLine, City, Country, Postcode) " +
-                               "VALUES (@custId, @filmId, @filmTitle, @seat, @price, " +
-                               "@card, @expMonth, @expYear, @cvv, @addr, @city, @country, @postcode); " +
-                               "SELECT SCOPE_IDENTITY();";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@custId", ticket.CustomerId);
-                cmd.Parameters.AddWithValue("@filmId", ticket.FilmId);
-                cmd.Parameters.AddWithValue("@filmTitle", ticket.FilmTitle);
-                cmd.Parameters.AddWithValue("@seat", ticket.SeatNumber);
-                cmd.Parameters.AddWithValue("@price", ticket.Price);
-                cmd.Parameters.AddWithValue("@card", ticket.CardNumber);
-                cmd.Parameters.AddWithValue("@expMonth", ticket.ExpiryMonth);
-                cmd.Parameters.AddWithValue("@expYear", ticket.ExpiryYear);
-                cmd.Parameters.AddWithValue("@cvv", ticket.CVV);
-                cmd.Parameters.AddWithValue("@addr", ticket.AddressLine);
-                cmd.Parameters.AddWithValue("@city", ticket.City);
-                cmd.Parameters.AddWithValue("@country", ticket.Country);
-                cmd.Parameters.AddWithValue("@postcode", ticket.Postcode);
-
-                int newId = Convert.ToInt32(cmd.ExecuteScalar());
-                return newId;
-            }
-        }
-    }
-}
+-- sample films
+INSERT INTO Films (Title, Genre, Duration, Rating, ShowTime, Price, AvailableSeats) VALUES
+('Inception', 'Sci-Fi', 148, '12A', '14:00', 12.99, 50),
+('The Dark Knight', 'Action', 152, '12A', '17:00', 13.99, 50),
+('Interstellar', 'Sci-Fi', 169, '12A', '20:00', 14.99, 50),
+('The Godfather', 'Crime', 175, '18', '21:00', 11.99, 50),
+('Pulp Fiction', 'Crime', 154, '18', '22:00', 11.99, 50),
+('Toy Story', 'Animation', 81, 'PG', '11:00', 8.99, 50),
+('Finding Nemo', 'Animation', 100, 'U', '13:00', 8.99, 50),
+('Avengers Endgame', 'Action', 181, '12A', '18:30', 15.99, 50);

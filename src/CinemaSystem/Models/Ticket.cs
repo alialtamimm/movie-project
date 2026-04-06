@@ -56,15 +56,6 @@ namespace CinemaSystem.Models
             Postcode = "";
         }
 
-        public void DisplayInfo()
-        {
-            Console.WriteLine($"  Ticket ID: {TicketId}");
-            Console.WriteLine($"  Film: {FilmTitle}");
-            Console.WriteLine($"  Seat: {SeatNumber}");
-            Console.WriteLine($"  Price: £{Price:F2}");
-            Console.WriteLine($"  Purchased: {PurchaseDate.ToShortDateString()}");
-        }
-
         public override string ToString()
         {
             return $"Ticket #{TicketId} - {FilmTitle} Seat {SeatNumber} - £{Price:F2}";

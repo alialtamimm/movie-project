@@ -1,9 +1,8 @@
 using System;
-using CinemaSystem.Models;
 
 namespace CinemaSystem.DataStructures
 {
-    // Custom hash table using separate chaining for collisions
+    // custom hash table using separate chaining for collisions
     public class CustomHashTable<TKey, TValue>
     {
         private HashNode<TKey, TValue>[] buckets;
@@ -19,19 +18,19 @@ namespace CinemaSystem.DataStructures
             count = 0;
         }
 
-        // Hash function - gets the index for a key
+        // hash function - gets the index for a key
         private int GetHashIndex(TKey key)
         {
             int hash = Math.Abs(key.GetHashCode());
             return hash % size;
         }
 
-        // Insert a key value pair into the table
+        // insert a key value pair into the table
         public void Insert(TKey key, TValue value)
         {
             int index = GetHashIndex(key);
 
-            // Check if key already exists, if so update it
+            // check if key already exists, if so update it
             HashNode<TKey, TValue> current = buckets[index];
             while (current != null)
             {
@@ -43,14 +42,14 @@ namespace CinemaSystem.DataStructures
                 current = current.Next;
             }
 
-            // Key doesnt exist so add new node at the front of the chain
+            // key doesnt exist so add new node at the front of the chain
             HashNode<TKey, TValue> newNode = new HashNode<TKey, TValue>(key, value);
             newNode.Next = buckets[index];
             buckets[index] = newNode;
             count++;
         }
 
-        // Search for a value by key, returns default if not found
+        // search for a value by key, returns default if not found
         public TValue Search(TKey key)
         {
             int index = GetHashIndex(key);
@@ -65,11 +64,10 @@ namespace CinemaSystem.DataStructures
                 current = current.Next;
             }
 
-            // Not found
             return default(TValue);
         }
 
-        // Check if a key exists in the table
+        // check if a key exists in the table
         public bool ContainsKey(TKey key)
         {
             int index = GetHashIndex(key);
@@ -87,7 +85,7 @@ namespace CinemaSystem.DataStructures
             return false;
         }
 
-        // Delete a key value pair
+        // delete a key value pair
         public bool Delete(TKey key)
         {
             int index = GetHashIndex(key);
@@ -101,12 +99,12 @@ namespace CinemaSystem.DataStructures
                 {
                     if (previous == null)
                     {
-                        // Its the first node in the chain
+                        // its the first node in the chain
                         buckets[index] = current.Next;
                     }
                     else
                     {
-                        // Skip over the node to remove it
+                        // skip over the node to remove it
                         previous.Next = current.Next;
                     }
                     count--;
@@ -119,7 +117,7 @@ namespace CinemaSystem.DataStructures
             return false;
         }
 
-        // Get all values in the table as an array
+        // get all values in the table as an array
         public TValue[] GetAllValues()
         {
             TValue[] values = new TValue[count];
@@ -137,25 +135,6 @@ namespace CinemaSystem.DataStructures
             }
 
             return values;
-        }
-
-        // Print everything in the table
-        public void Display()
-        {
-            for (int i = 0; i < size; i++)
-            {
-                HashNode<TKey, TValue> current = buckets[i];
-                if (current != null)
-                {
-                    Console.Write($"Bucket {i}: ");
-                    while (current != null)
-                    {
-                        Console.Write($"[{current.Key}: {current.Value}] -> ");
-                        current = current.Next;
-                    }
-                    Console.WriteLine("null");
-                }
-            }
         }
     }
 }

@@ -10,7 +10,6 @@ namespace CinemaSystem.Pages
     {
         private readonly CustomHashTable<int, Film> _filmTable;
         private readonly CustomLinkedList<Ticket> _ticketList;
-        private readonly CustomLinkedList<Customer> _customerList;
 
         public Film SelectedFilm { get; set; }
         public decimal Discount { get; set; }
@@ -18,11 +17,10 @@ namespace CinemaSystem.Pages
         public string ErrorMessage { get; set; } = "";
         public string SuccessMessage { get; set; } = "";
 
-        public BuyTicketModel(CustomHashTable<int, Film> filmTable, CustomLinkedList<Ticket> ticketList, CustomLinkedList<Customer> customerList)
+        public BuyTicketModel(CustomHashTable<int, Film> filmTable, CustomLinkedList<Ticket> ticketList)
         {
             _filmTable = filmTable;
             _ticketList = ticketList;
-            _customerList = customerList;
         }
 
         public IActionResult OnGet(int filmId)

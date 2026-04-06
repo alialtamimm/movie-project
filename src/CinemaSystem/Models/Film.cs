@@ -50,25 +50,12 @@ namespace CinemaSystem.Models
             PosterUrl = posterUrl;
         }
 
-        // prints film info to the console
-        public void DisplayInfo()
-        {
-            Console.WriteLine($"  ID: {FilmId}");
-            Console.WriteLine($"  Title: {Title}");
-            Console.WriteLine($"  Genre: {Genre}");
-            Console.WriteLine($"  Duration: {Duration} mins");
-            Console.WriteLine($"  Rating: {Rating}");
-            Console.WriteLine($"  Showtime: {ShowTime}");
-            Console.WriteLine($"  Price: £{Price:F2}");
-            Console.WriteLine($"  Seats left: {AvailableSeats}");
-        }
-
         public override string ToString()
         {
             return $"{Title} ({Genre}) - {ShowTime} - £{Price:F2}";
         }
 
-        // need this so the hash table can compare films
+        // needed so the hash table can compare films
         public override bool Equals(object obj)
         {
             if (obj is Film other)

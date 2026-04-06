@@ -15,7 +15,7 @@ namespace CinemaSystem.DataStructures
         }
     }
 
-    // custom linked list for storing bookings, members etc
+    // custom linked list for storing bookings, customers etc
     public class CustomLinkedList<T>
     {
         private ListNode<T> head;
@@ -147,24 +147,6 @@ namespace CinemaSystem.DataStructures
                 current = current.Next;
             }
             return arr;
-        }
-
-        // print all items
-        public void Display()
-        {
-            ListNode<T> current = head;
-            int index = 0;
-            while (current != null)
-            {
-                Console.WriteLine($"[{index}] {current.Data}");
-                current = current.Next;
-                index++;
-            }
-
-            if (count == 0)
-            {
-                Console.WriteLine("List is empty.");
-            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CinemaSystem.Models;
 using CinemaSystem.DataStructures;
+using CinemaSystem.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,26 @@ builder.Services.AddSession(options =>
 var app = builder.Build();
 
 var filmTable = app.Services.GetRequiredService<CustomHashTable<int, Film>>();
-LoadSampleFilms(filmTable);
+var customerList = app.Services.GetRequiredService<CustomLinkedList<Customer>>();
+var ticketList = app.Services.GetRequiredService<CustomLinkedList<Ticket>>();
+
+// try loading data from the sql database
+string connString = @"Server=(localdb)\MSSQLLocalDB;Database=CinemaDB;Trusted_Connection=True;TrustServerCertificate=True;";
+DatabaseHelper db = new DatabaseHelper(connString);
+
+try
+{
+    db.LoadFilms(filmTable);
+    db.LoadCustomers(customerList);
+    db.LoadTickets(ticketList);
+    Console.WriteLine("Data loaded from database.");
+}
+catch (Exception ex)
+{
+    Console.WriteLine("Could not connect to database: " + ex.Message);
+    Console.WriteLine("Loading sample films instead.");
+    LoadSampleFilms(filmTable);
+}
 
 app.UseStaticFiles();
 app.UseRouting();
@@ -29,7 +49,7 @@ app.MapRazorPages();
 
 app.Run();
 
-// load sample films on startup
+// load sample films if database is not available
 void LoadSampleFilms(CustomHashTable<int, Film> table)
 {
     table.Insert(1, new Film(1, "Inception", "Sci-Fi", 148, "12A", "14:00", 12.99m, 50, "/images/inception.jpg"));
