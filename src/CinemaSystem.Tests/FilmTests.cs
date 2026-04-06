@@ -9,10 +9,8 @@ namespace CinemaSystem.Tests
         [TestMethod]
         public void TestFilmConstructor()
         {
-            // arrange and act
-            Film film = new Film(1, "Inception", "Sci-Fi", 148, "12A", "18:30", 12.99m);
+            Film film = new Film(1, "Inception", "Sci-Fi", 148, "12A", "18:30", 12.99m, 50);
 
-            // assert
             Assert.AreEqual(1, film.FilmId);
             Assert.AreEqual("Inception", film.Title);
             Assert.AreEqual("Sci-Fi", film.Genre);
@@ -20,6 +18,7 @@ namespace CinemaSystem.Tests
             Assert.AreEqual("12A", film.Rating);
             Assert.AreEqual("18:30", film.ShowTime);
             Assert.AreEqual(12.99m, film.Price);
+            Assert.AreEqual(50, film.AvailableSeats);
         }
 
         [TestMethod]
@@ -30,13 +29,13 @@ namespace CinemaSystem.Tests
             Assert.AreEqual("", film.Title);
             Assert.AreEqual("", film.Genre);
             Assert.AreEqual("", film.Rating);
-            Assert.AreEqual("", film.ShowTime);
+            Assert.AreEqual(50, film.AvailableSeats);
         }
 
         [TestMethod]
         public void TestToString()
         {
-            Film film = new Film(1, "Inception", "Sci-Fi", 148, "12A", "18:30", 12.99m);
+            Film film = new Film(1, "Inception", "Sci-Fi", 148, "12A", "18:30", 12.99m, 50);
             string result = film.ToString();
 
             Assert.IsTrue(result.Contains("Inception"));
@@ -46,9 +45,9 @@ namespace CinemaSystem.Tests
         [TestMethod]
         public void TestFilmEquals()
         {
-            Film film1 = new Film(1, "Inception", "Sci-Fi", 148, "12A", "18:30", 12.99m);
-            Film film2 = new Film(1, "Inception", "Sci-Fi", 148, "12A", "18:30", 12.99m);
-            Film film3 = new Film(2, "Batman", "Action", 152, "12A", "20:00", 14.99m);
+            Film film1 = new Film(1, "Inception", "Sci-Fi", 148, "12A", "18:30", 12.99m, 50);
+            Film film2 = new Film(1, "Inception", "Sci-Fi", 148, "12A", "18:30", 12.99m, 50);
+            Film film3 = new Film(2, "Batman", "Action", 152, "12A", "20:00", 14.99m, 50);
 
             Assert.IsTrue(film1.Equals(film2));
             Assert.IsFalse(film1.Equals(film3));
