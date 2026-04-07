@@ -36,3 +36,5 @@ Thumbs.db
 project.lock.json
 *.nuget.props
 *.nuget.targets
+
+TestResults/
